@@ -1,0 +1,454 @@
+warning: in the working copy of 'Info_Schemas.txt', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'PC_RI-II_Schema.xsd', CRLF will be replaced by LF the next time Git touches it
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mindex 83f15a7..77e532a 100644[m
+[1m--- a/.gitignore[m
+[1m+++ b/.gitignore[m
+[36m@@ -1,3 +1 @@[m
+[31m-# ignore all image files[m
+[31m-*.jpeg[m
+[31m-*.png[m
+\ No newline at end of file[m
+[32m+[m[32m# ignore[m
+\ No newline at end of file[m
+[1mdiff --git a/Info_Schemas.txt b/Info_Schemas.txt[m
+[1mindex bd4eb8d..4a2270e 100644[m
+[1m--- a/Info_Schemas.txt[m
+[1m+++ b/Info_Schemas.txt[m
+[36m@@ -195,7 +195,7 @@[m
+             <xs:annotation>[m
+                 <xs:documentation xml:lang="en">[m
+                     The code comparison is defined by:[m
+[31m-                    _ the comparison code of the key comparison (xml element: "codeComparisonCode")[m
+[32m+[m[32m                    _ the comparison code of the pilot comparison (xml element: "softwareComparisonCode")[m
+                       such as defined in the CIPM MRA https://www.bipm.org/documents/20126/43742162/CIPM-MRA-G-11.pdf[m
+                     _ the service category identifier from the SI Digital Framework https://si-digital-framework.org/kcdb-sc[m
+                     _ the metrological data of the radionuclide gather in the SI Digital Framework https://si-digital-framework.org/kcdb-sc/nucl[m
+[36m@@ -206,12 +206,12 @@[m
+                 </xs:documentation>[m
+             </xs:annotation>                  [m
+             <xs:element name = "softwareComparisonCode" type="xs:string"></xs:element>[m
+[31m-            <xs:element name = "serviceCategoryID" type="kc:serviceCategoryID" minOccurs= "0" maxOccurs = "1"></xs:element> <!-- From KC-->[m
+[31m-            <xs:element name = "siDigitalFrameworkRadionuclide" type="kc:siDigitalFrameworkRadionuclide"></xs:element>	<!-- From KC-->[m
+[31m-            <xs:element name = "pilot" type = "kc:laboratoryType"></xs:element> <!-- From KC-->[m
+[32m+[m[32m            <xs:element name = "serviceCategoryPID" type="xs:anyURI" minOccurs= "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "siDigitalFrameworkRadionuclide" type="xs:anyURI"></xs:element>[m
+[32m+[m[32m            <xs:element name = "pilot" type = "kc:laboratoryType"></xs:element>[m
+             <xs:element name = "datasetMeasType" type="xs:string"></xs:element>[m
+             <xs:element name = "datasetDownLink" type="xs:anyURI"></xs:element>[m
+[31m-            <xs:element name = "linkedComparisonCode" type="kc:comparisonCode" minOccurs= "0" maxOccurs = "1"></xs:element> <!-- From KC-->[m
+[32m+[m[32m            <xs:element name = "linkedComparisonCode" type="kc:linkedCompType" minOccurs= "0" maxOccurs = "1"></xs:element> <!-- From KC-->[m
+         </xs:sequence>[m
+     </xs:complexType>[m
+ [m
+[36m@@ -245,7 +245,7 @@[m
+                     _ effective degrees of freedom from uncertainty analysis (xml element: "effDegreesOfFreedom")  [m
+                 </xs:documentation>[m
+             </xs:annotation>[m
+[31m-            <xs:element name = "measurementResult" type="dsi:realQuantityType"></xs:element>[m
+[32m+[m[32m            <xs:element name="measurementResult" type="dsi:realQuantityType"></xs:element>[m
+             <xs:element name="standardUnc" type="dsi:valueStandardMUType"></xs:element>[m
+             <xs:element name="effDegreesOfFreedom" minOccurs="0" maxOccurs="1">[m
+                 <xs:simpleType>[m
+[36m@@ -528,20 +528,20 @@[m
+                     _ A more detailed description of the measurement method in string (xml element: "description")[m
+                     _ Possible additional comments on the measurements (xml element: "comments")[m
+                     _ The result of the activity measurement (xml element: "activity")[m
+[31m-                    _ The metadata related to activity estimation (xml element: "activity")[m
+[32m+[m[32m                    _ The metadata related to activity estimation (xml element: "activityMetadata")[m
+                 </xs:documentation> [m
+             </xs:annotation> [m
+             <xs:element name = "referenceDate" type = "xs:dateTime" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "methodID" type = "kc:methodID" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "methodID" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "description" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "comments" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "activity" type = "kc:activityType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "activity" type = "pc:activityType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "activityMetadata" type = "pc:measMetaDataType" minOccurs = "0" maxOccurs = "1"></xs:element> [m
+         </xs:sequence>[m
+     </xs:complexType>[m
+ [m
+[31m-    <!-- Define a submission to the BIPM SIR system[m
+[31m-    <xs:complexType name = "softwareCompSubmissionType">[m
+[32m+[m[32m    <!-- Define a submission to the NuCodeComp system -->[m
+[32m+[m[32m    <xs:complexType name = "submissionType">[m
+         <xs:sequence>[m
+             <xs:annotation>[m
+                 <xs:documentation xml:lang="en">         [m
+[36m@@ -550,66 +550,39 @@[m
+                     _ The year of the participation, ie measurement by the SIR  (xml element: "year")[m
+                     _ The boolean indicator (true or false) saying if the result is used in the KCRV (xml element: "inKCRV")[m
+                     _ The boolean indicator (true or false) saying if the result is currently valid for a degree of equivalence published in the KCDB (xml element: "doeValid")[m
+[31m-                    _ Details on the radioactive standard solution (xml element: "radioactiveSolutions")[m
+                     _ Details on the activity measurement carried out by the laboratory (xml element: "laboratoryMeasurements")[m
+[31m-                    _ Details on the SIR measurement (equivalent activity) carried out by the BIPM (xml element: "bipmMeasurements")[m
+                 </xs:documentation>[m
+             </xs:annotation>[m
+             <xs:element name = "laboratory" type = "kc:laboratoryType" minOccurs = "0" maxOccurs = "1"></xs:element>										[m
+             <xs:element name = "year" type = "xs:gYear" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "inKCRV" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "doeValid" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "radioactiveSolutions" type = "kc:radSolsType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "laboratoryMeasurements" type = "kc:labMeassType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "bipmMeasurements" type = "kc:bipmMeassType"  minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "laboratoryMeasurements" type = "pc:softwareLabMeasType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+         </xs:sequence>[m
+[31m-    </xs:complexType>  -->[m
+[31m-[m
+[31m-    <!-- Define the metadata of the key comparison[m
+[31m-    <xs:complexType name = "compMetaDataType">[m
+[31m-        <xs:sequence>[m
+[31m-            <xs:annotation>[m
+[31m-                <xs:documentation xml:lang="en">         [m
+[31m-                    The metadata of key comparisons BIPM.RI(II)-K1 provide administrative and technical information[m
+[31m-                    on each submission (xml element: "submission") that contribute to the realization of the derived unit becquerel for a given radionuclide.[m
+[31m-                    The ultimate semantic reference for the becquerel unit is provided by the SI Reference Point: https://si-digital-framework.org/SI/units/becquerel[m
+[31m-                </xs:documentation>[m
+[31m-            </xs:annotation>[m
+[31m-            <xs:element name = "submission" type = "kc:submissionType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>[m
+[31m-        </xs:sequence>[m
+[31m-    </xs:complexType> -->[m
+[32m+[m[32m    </xs:complexType>[m
+ [m
+     <!-- Define a pilot comparison -->[m
+     <xs:complexType name = "comparisonType">[m
+         <xs:sequence>[m
+             <xs:annotation>[m
+                 <xs:documentation xml:lang="en">[m
+[31m-                    Key comparison results are key data in the realization of the derived unit becquerel for a given radionuclide.[m
+[32m+[m[32m                    Pilot algorithm comparison results are key in the realization of the derived unit becquerel for a given radionuclide.[m
+                     The ultimate semantic reference for this derived SI unit is provided by https://si-digital-framework.org/SI/units/becquerel[m
+[31m-                    The key comparison results are officially publish on BIPM the Key Comparison DataBase https://www.bipm.org/kcdb/[m
+                      [m
+[31m-                    Successful participation in this comparison by a laboratory may provide evidential support for [m
+[31m-                    Calibration and Measurement Capability (CMC) claims for [nuclide] measured using the laboratory's [m
+[31m-                    method(s) used in the comparison or methods calibrated by those used for the comparison. This[m
+[31m-                    comparison may also be used to support CMC claims for those radionuclides measured in the laboratory [m
+[31m-                    using the same method and having a degree of difficulty at or below that of the radionuclide measured [m
+[31m-                    in this comparison as indicated in the current Measurement Methods Matrix (MMM)[1].[m
+[31m-                    [1] International Rules for CMC Claims in Ionizing Radiation Metrology Doc 3 March 16 2021 (Sept 2020),[m
+                     Consultative Committee for Ionizing Radiation metrology (CCRI),[m
+[31m-                    https://www.bipm.org/documents/20126/54619299/Rules+for+entering+CMC+claims+in+ionizing+radiation+metrology/c0b97b77-99e1-4abb-1d10-9a90a35fc9bf[m
+                     [m
+                     Additionally, to facilitate machine readability and actionability,[m
+[31m-                    the key comparison reference value and degrees of equivalence obtained in BIPM.RI(II)-K1 comparisons are made available in this machine-readable document.[m
+[32m+[m[32m                    the pilot comparison reference value and degrees of equivalence obtained in BIPM.RI(II)-P1 comparisons are made available in this machine-readable document.[m
+                     The metadata supporting these results are also included in this machine-readable document.[m
+                     The root structure is composed of:[m
+                     _ The general information about the key comparison (xml element: "generalInformation")[m
+[31m-                    _ The results of the key comparison (xml element: "comparisonData")[m
+[31m-                    _ The metadata (administrative and technical) supporting these results (xml element: "comparisonMetadata")[m
+[32m+[m[32m                    _ The releases with degrees of Equivalence and KCRVs (xml element: "comparisonData")[m
+[32m+[m[32m                    _ The technical metadata supporting these results (xml element: "comparisonSubmissions")[m
+                 </xs:documentation> [m
+             </xs:annotation>[m
+             <xs:element name = "generalInformation" type = "pc:softwareComparisonIDType"  minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "comparisonData" type = "pc:comparisonDataType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "comparisonMetadata" type = "pc:compMetaDataType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "comparisonData" type = "kc:comparisonDataType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "comparisonSubmissions" type = "pc:submissionType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+         </xs:sequence>[m
+     </xs:complexType>[m
+ [m
+[1mdiff --git a/PC_RI-II_Schema.xsd b/PC_RI-II_Schema.xsd[m
+[1mindex bd4eb8d..fdefbe0 100644[m
+[1m--- a/PC_RI-II_Schema.xsd[m
+[1m+++ b/PC_RI-II_Schema.xsd[m
+[36m@@ -46,23 +46,6 @@[m
+         </xs:documentation>[m
+     </xs:annotation>[m
+ [m
+[31m-	<!-- Define a laboratory [m
+[31m-    <xs:complexType name = "laboratoryType">[m
+[31m-        <xs:sequence>[m
+[31m-            <xs:annotation>[m
+[31m-                <xs:documentation xml:lang="en">[m
+[31m-                    A laboratory or a metrological institute is defined by: [m
+[31m-                    _ The acronym given in the list of signatories of the CIPM MRA: https://www.bipm.org/en/cipm-mra/participation/[m
+[31m-					_ The past acronyms used for this institute (when applicable)[m
+[31m-                    _ The RoR identifier (when available): https://ror.org/ [m
+[31m-                </xs:documentation> [m
+[31m-            </xs:annotation>                                                                  [m
+[31m-            <xs:element name = "acronym" type = "xs:string"></xs:element>[m
+[31m-			<xs:element name = "pastAcronyms" type = "xs:string" minOccurs = "0"></xs:element>[m
+[31m-            <xs:element name = "ror" type = "xs:anyURI" minOccurs = "0"></xs:element>[m
+[31m-        </xs:sequence>[m
+[31m-    </xs:complexType> -->[m
+[31m-[m
+ 	<!-- Define a software (NEW) -->[m
+     <xs:complexType name = "softwareType">[m
+         <xs:sequence>[m
+[36m@@ -78,124 +61,19 @@[m
+             </xs:annotation>                                                                  [m
+             <xs:element name = "softwareName" type = "xs:string"></xs:element>[m
+ 			<xs:element name = "softwareVersion" type = "xs:string" minOccurs = "0"></xs:element>[m
+[31m-            <xs:element name = "laboratory" type = "kc:laboratoryType"></xs:element> <!-- From KC-->[m
+[32m+[m[32m            <xs:element name = "laboratory" type = "kc:laboratoryType"></xs:element>[m
+             <xs:element name = "softwareApplication" type = "xs:string"></xs:element>[m
+             <xs:element name = "doi" type = "xs:anyURI" minOccurs = "0"></xs:element>[m
+         </xs:sequence>[m
+     </xs:complexType>[m
+ [m
+[31m-    <!-- Define a degree of equivalence[m
+[31m-	<xs:complexType name = "doeType">[m
+[31m-        <xs:sequence>[m
+[31m-            <xs:annotation>[m
+[31m-                <xs:documentation xml:lang="en">[m
+[31m-                    Every participant in a comparison is entitled to have one result included in the KCDB as long as[m
+[31m-                    the NMI is a signatory or designated institute listed in the CIPM MRA and the result is valid[m
+[31m-                    (i.e., not older than 20 years).[m
+[31m-                    An NMI may withdraw its result only if all other participants agree.[m
+[31m-                    The degree of equivalence of a given measurement standard is the degree to which this standard is[m
+[31m-                    consistent with the KCRV.[m
+[31m-                    The degree of equivalence is expressed quantitatively in terms of the deviation from the key comparison[m
+[31m-                    reference value and the expanded uncertainty of this deviation ($k = 2$).[m
+[31m-                    The CCRI(II) agrees on the following statement on degree of equivalence evaluated in BIPM.RI(II)-K1 comparisons: [m
+[31m-                        _ The degree of equivalence of the result of a particular NMI, $i$, with the key comparison reference value [m
+[31m-                        is expressed as the difference $D_{i}$ between the values $D_{i}=A_{\textrm{e}i}-KCRV$[m
+[31m-                        and the expanded uncertainty ($k=2$)  of this difference, $U_{i}$, known as the equivalence uncertainty; hence $U_{i}=2u(D_{i})$.[m
+[31m-                        _ When the result of the NMI $i$ is included in the KCRV with a weight $w_{i}$, then $u^{2}(D_{i})=(1-2w_{i})u_i^{2}+u^{2}(KCRV)$.[m
+[31m-                        _ However, when the result of the NMI $i$ is not included in the KCRV, then $u^2(D_i)=u_i^2+u^2(KCRV)$.[m
+[31m-                        [m
+[31m-                    A degree of equivalence is reported with the following elements:[m
+[31m-                        _ The laboratory (xml element: "laboratory")[m
+[31m-                        _ The degree of equivalence defined by a dsi:real element.[m
+[31m-                        This element is expected to contain a value, a multiple of becquerel as unit,[m
+[31m-                        and an expanded uncertainty with a coverage factor equal to 2.[m
+[31m-                        The becquerel unit is defined in https://si-digital-framework.org/SI/units/becquerel[m
+[31m-                        and the possible prefixes in https://si-digital-framework.org/SI/prefixes[m
+[31m-                </xs:documentation>[m
+[31m-            </xs:annotation>[m
+[31m-            <xs:element name = "laboratory" type = "kc:laboratoryType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-			<xs:element name = "result" type="dsi:realQuantityType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-        </xs:sequence>[m
+[31m-    </xs:complexType> -->[m
+[31m-    [m
+[31m-	<!-- Define a linked comparison[m
+[31m-    <xs:complexType name = "linkedCompType">[m
+[31m-        <xs:sequence>[m
+[31m-            <xs:annotation>[m
+[31m-                <xs:documentation xml:lang="en">[m
+[31m-                    In some cases, CCRI(II) or regional key comparisons could have been linked to the SIR.[m
+[31m-                    The degrees of equivalence in compliance with BIPM.RI(II)-K1 comparisons are provided.[m
+[31m-                    The linked comparison is identified[m
+[31m-                    _ by its CIPM-MRA identifier https://www.bipm.org/documents/20126/43742162/CIPM-MRA-G-11.pdf (xml element: "comparisonCode")[m
+[31m-                    _ the Consultative Committee (CC) that organize the comparison (xml element: "consultativeCommittee")[m
+[31m-                    _ or the Regional Metrology Organization (RMO) that organize the comparison (xml element: "rmo")[m
+[31m-                    _ the year when the comparison was carried out (xml element: "year")[m
+[31m-                    _ the DOI of the report of the linked comparison (xml element: "doi")  [m
+[31m-                </xs:documentation>[m
+[31m-            </xs:annotation>[m
+[31m-            <xs:element name = "comparisonCode" type="xs:string"></xs:element>[m
+[31m-            <xs:element name = "consultativeCommittee" type="xs:string" minOccurs="0"></xs:element>[m
+[31m-            <xs:element name = "rmo" type="xs:string" minOccurs="0"></xs:element>[m
+[31m-            <xs:element name = "year" type="xs:gYear"></xs:element>[m
+[31m-            <xs:element name = "doi" type="xs:anyURI"></xs:element>[m
+[31m-        </xs:sequence>[m
+[31m-    </xs:complexType> -->[m
+[31m-    [m
+[31m-    <!-- Define a sequence of degrees of equivalence	[m
+[31m-	<xs:complexType name = "doesType">[m
+[31m-        <xs:sequence>[m
+[31m-            <xs:annotation>[m
+[31m-                <xs:documentation xml:lang="en">[m
+[31m-                    Each time the comparisons are updated, a sequence of degrees of equivalence is published.[m
+[31m-                    Sometimes a sequence can be linked to a CCRI(II) or regional comparison.[m
+[31m-                </xs:documentation>[m
+[31m-            </xs:annotation>[m
+[31m-            <xs:element name = "linkedComparison" type = "kc:linkedCompType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "degreeOfEquivalence" type = "kc:doeType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>[m
+[31m-        </xs:sequence>[m
+[31m-    </xs:complexType> -->[m
+[31m-[m
+[31m-    <!-- Define a release of the comparison[m
+[31m-	<xs:complexType name = "releaseType">[m
+[31m-        <xs:sequence>[m
+[31m-            <xs:annotation>[m
+[31m-                <xs:documentation xml:lang="en">[m
+[31m-                    The comparison data is reported with the following elements: [m
+[31m-                     _ The DOI of the related Metrologia technical supplement (xml element: "doi")[m
+[31m-                     _ The year of the comparison, meaning the year of the first publication or update of the comparison results (xml element: "year")[m
+[31m-                     _ The KCRV (xml element: "KCRV")[m
+[31m-                     _ The degrees of equivalence (xml element: "degreesOfEquivalence")[m
+[31m-					 [m
+[31m-                    In May 2013, the CCRI(II) decided to calculate the KCRV by using the power-moderated weighted mean (PMM).[m
+[31m-                    https://doi.org/10.1088/0026-1394/52/3/S200[m
+[31m-                    key comparison results can be selected for the KCRV with the following provisions: [m
+[31m-                    _ results for solutions standardized by only primary techniques are accepted, with the exception of radioactive gas standards (for which results from transfer instrument measurements that are directly traceable to a primary measurement in the laboratory may be included); [m
+[31m-                    _ each NMI or other laboratory may use only one result (normally the most recent result or the mean if more than one ampoule is submitted);[m
+[31m-                    _ results more than 20 years old are included in the calculation of the KCRV but are not included in data shown in the KCDB or in the plots in this report, as they have expired;Acronym[m
+[31m-                    _ possible outliers can be identified on a mathematical basis and excluded from the KCRV using the normalized error test with a test value of 2.5 and using the modified uncertainties;[m
+[31m-                    _ results can also be excluded for technical reasons; and[m
+[31m-                    _ the CCRI(II) is always the final arbiter regarding excluding any data from the calculation of the KCRV. Although the KCRV may be modified when other NMIs participate, on the advice of the Key Comparison Working Group of the CCRI(II), such modifications are made only by the CCRI(II) during one of its biennial meetings, or by consensus through electronic means (e.g., email) as discussed at the CCRI(II) meeting in 2013.[m
+[31m-                                                                [m
+[31m-                    The key comparison reference value (KCRV) is defined by a dsi: real element.[m
+[31m-                    This element is expected to contain a value, a multiple of becquerel as unit, and a standard uncertainty (a coverage factor equal to 1).[m
+[31m-                    The becquerel unit is defined in https://si-digital-framework.org/SI/units/becquerel[m
+[31m-                    and the possible prefixes in https://si-digital-framework.org/SI/prefixes					 [m
+[31m-                </xs:documentation>[m
+[31m-            </xs:annotation>[m
+[31m-            <xs:element name = "doi" type="xs:anyURI"></xs:element>[m
+[31m-            <xs:element name = "year" type="xs:gYear"></xs:element>[m
+[31m-			<xs:element name = "kcrv" type="dsi:realQuantityType" minOccurs= "0" maxOccurs = "1"></xs:element>			[m
+[31m-            <xs:element name = "degreesOfEquivalence" type = "kc:doesType" minOccurs ="0" maxOccurs = "unbounded"></xs:element>[m
+[31m-		</xs:sequence>[m
+[31m-    </xs:complexType> -->[m
+[31m-[m
+     <!-- Define a comparison (NEW) -->	[m
+ 	<xs:complexType name = "softwareComparisonIDType">[m
+         <xs:sequence>[m
+             <xs:annotation>[m
+                 <xs:documentation xml:lang="en">[m
+                     The code comparison is defined by:[m
+[31m-                    _ the comparison code of the key comparison (xml element: "codeComparisonCode")[m
+[32m+[m[32m                    _ the comparison code of the pilot comparison (xml element: "softwareComparisonCode")[m
+                       such as defined in the CIPM MRA https://www.bipm.org/documents/20126/43742162/CIPM-MRA-G-11.pdf[m
+                     _ the service category identifier from the SI Digital Framework https://si-digital-framework.org/kcdb-sc[m
+                     _ the metrological data of the radionuclide gather in the SI Digital Framework https://si-digital-framework.org/kcdb-sc/nucl[m
+[36m@@ -206,30 +84,16 @@[m
+                 </xs:documentation>[m
+             </xs:annotation>                  [m
+             <xs:element name = "softwareComparisonCode" type="xs:string"></xs:element>[m
+[31m-            <xs:element name = "serviceCategoryID" type="kc:serviceCategoryID" minOccurs= "0" maxOccurs = "1"></xs:element> <!-- From KC-->[m
+[31m-            <xs:element name = "siDigitalFrameworkRadionuclide" type="kc:siDigitalFrameworkRadionuclide"></xs:element>	<!-- From KC-->[m
+[31m-            <xs:element name = "pilot" type = "kc:laboratoryType"></xs:element> <!-- From KC-->[m
+[32m+[m[32m            <xs:element name = "serviceCategoryPID" type="xs:anyURI" minOccurs= "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "siDigitalFrameworkRadionuclide" type="xs:anyURI"></xs:element>[m
+[32m+[m[32m            <xs:element name = "pilot" type = "kc:laboratoryType"></xs:element>[m
+             <xs:element name = "datasetMeasType" type="xs:string"></xs:element>[m
+             <xs:element name = "datasetDownLink" type="xs:anyURI"></xs:element>[m
+[31m-            <xs:element name = "linkedComparisonCode" type="kc:comparisonCode" minOccurs= "0" maxOccurs = "1"></xs:element> <!-- From KC-->[m
+[32m+[m[32m            <xs:element name = "linkedComparisonCode" type="kc:linkedCompType" minOccurs= "0" maxOccurs = "1"></xs:element>[m
+         </xs:sequence>[m
+     </xs:complexType>[m
+ [m
+[31m-    <!-- Define a comparison data[m
+[31m-    <xs:complexType name = "comparisonDataType">[m
+[31m-        <xs:sequence>[m
+[31m-            <xs:annotation>[m
+[31m-                <xs:documentation xml:lang="en">[m
+[31m-                    The comparison data is defined as a sequence of every releases of the given comparison.[m
+[31m-                    The comparison data contains the final results of the comparison (the KCRV and the degrees of equivalence)[m
+[31m-                    that could be used to claim CMC in the related KCDB service category.[m
+[31m-                </xs:documentation>[m
+[31m-            </xs:annotation> [m
+[31m-            <xs:element name = "release" type = "kc:releaseType"  minOccurs = "0" maxOccurs = "unbounded"></xs:element>[m
+[31m-        </xs:sequence>[m
+[31m-    </xs:complexType> -->[m
+[31m-[m
+[31m-    <!-- Define an activity measurement (NEW) -->[m
+[32m+[m[32m     <!-- Define an activity measurement (NEW) -->[m
+     <xs:complexType name = "activityType">[m
+         <xs:sequence>[m
+             <xs:annotation>[m
+[36m@@ -245,7 +109,7 @@[m
+                     _ effective degrees of freedom from uncertainty analysis (xml element: "effDegreesOfFreedom")  [m
+                 </xs:documentation>[m
+             </xs:annotation>[m
+[31m-            <xs:element name = "measurementResult" type="dsi:realQuantityType"></xs:element>[m
+[32m+[m[32m            <xs:element name="measurementResult" type="dsi:realQuantityType"></xs:element>[m
+             <xs:element name="standardUnc" type="dsi:valueStandardMUType"></xs:element>[m
+             <xs:element name="effDegreesOfFreedom" minOccurs="0" maxOccurs="1">[m
+                 <xs:simpleType>[m
+[36m@@ -528,20 +392,20 @@[m
+                     _ A more detailed description of the measurement method in string (xml element: "description")[m
+                     _ Possible additional comments on the measurements (xml element: "comments")[m
+                     _ The result of the activity measurement (xml element: "activity")[m
+[31m-                    _ The metadata related to activity estimation (xml element: "activity")[m
+[32m+[m[32m                    _ The metadata related to activity estimation (xml element: "activityMetadata")[m
+                 </xs:documentation> [m
+             </xs:annotation> [m
+             <xs:element name = "referenceDate" type = "xs:dateTime" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "methodID" type = "kc:methodID" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "methodID" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "description" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "comments" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "activity" type = "kc:activityType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "activity" type = "pc:activityType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "activityMetadata" type = "pc:measMetaDataType" minOccurs = "0" maxOccurs = "1"></xs:element> [m
+         </xs:sequence>[m
+     </xs:complexType>[m
+ [m
+[31m-    <!-- Define a submission to the BIPM SIR system[m
+[31m-    <xs:complexType name = "softwareCompSubmissionType">[m
+[32m+[m[32m    <!-- Define a submission to the NuCodeComp system -->[m
+[32m+[m[32m    <xs:complexType name = "submissionType">[m
+         <xs:sequence>[m
+             <xs:annotation>[m
+                 <xs:documentation xml:lang="en">         [m
+[36m@@ -550,66 +414,39 @@[m
+                     _ The year of the participation, ie measurement by the SIR  (xml element: "year")[m
+                     _ The boolean indicator (true or false) saying if the result is used in the KCRV (xml element: "inKCRV")[m
+                     _ The boolean indicator (true or false) saying if the result is currently valid for a degree of equivalence published in the KCDB (xml element: "doeValid")[m
+[31m-                    _ Details on the radioactive standard solution (xml element: "radioactiveSolutions")[m
+                     _ Details on the activity measurement carried out by the laboratory (xml element: "laboratoryMeasurements")[m
+[31m-                    _ Details on the SIR measurement (equivalent activity) carried out by the BIPM (xml element: "bipmMeasurements")[m
+                 </xs:documentation>[m
+             </xs:annotation>[m
+             <xs:element name = "laboratory" type = "kc:laboratoryType" minOccurs = "0" maxOccurs = "1"></xs:element>										[m
+             <xs:element name = "year" type = "xs:gYear" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "inKCRV" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+             <xs:element name = "doeValid" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "radioactiveSolutions" type = "kc:radSolsType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "laboratoryMeasurements" type = "kc:labMeassType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "bipmMeasurements" type = "kc:bipmMeassType"  minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-        </xs:sequence>[m
+[31m-    </xs:complexType>  -->[m
+[31m-[m
+[31m-    <!-- Define the metadata of the key comparison[m
+[31m-    <xs:complexType name = "compMetaDataType">[m
+[31m-        <xs:sequence>[m
+[31m-            <xs:annotation>[m
+[31m-                <xs:documentation xml:lang="en">         [m
+[31m-                    The metadata of key comparisons BIPM.RI(II)-K1 provide administrative and technical information[m
+[31m-                    on each submission (xml element: "submission") that contribute to the realization of the derived unit becquerel for a given radionuclide.[m
+[31m-                    The ultimate semantic reference for the becquerel unit is provided by the SI Reference Point: https://si-digital-framework.org/SI/units/becquerel[m
+[31m-                </xs:documentation>[m
+[31m-            </xs:annotation>[m
+[31m-            <xs:element name = "submission" type = "kc:submissionType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>[m
+[32m+[m[32m            <xs:element name = "laboratoryMeasurements" type = "pc:softwareLabMeasType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+         </xs:sequence>[m
+[31m-    </xs:complexType> -->[m
+[32m+[m[32m    </xs:complexType>[m
+ [m
+     <!-- Define a pilot comparison -->[m
+     <xs:complexType name = "comparisonType">[m
+         <xs:sequence>[m
+             <xs:annotation>[m
+                 <xs:documentation xml:lang="en">[m
+[31m-                    Key comparison results are key data in the realization of the derived unit becquerel for a given radionuclide.[m
+[32m+[m[32m                    Pilot algorithm comparison results are key in the realization of the derived unit becquerel for a given radionuclide.[m
+                     The ultimate semantic reference for this derived SI unit is provided by https://si-digital-framework.org/SI/units/becquerel[m
+[31m-                    The key comparison results are officially publish on BIPM the Key Comparison DataBase https://www.bipm.org/kcdb/[m
+                      [m
+[31m-                    Successful participation in this comparison by a laboratory may provide evidential support for [m
+[31m-                    Calibration and Measurement Capability (CMC) claims for [nuclide] measured using the laboratory's [m
+[31m-                    method(s) used in the comparison or methods calibrated by those used for the comparison. This[m
+[31m-                    comparison may also be used to support CMC claims for those radionuclides measured in the laboratory [m
+[31m-                    using the same method and having a degree of difficulty at or below that of the radionuclide measured [m
+[31m-                    in this comparison as indicated in the current Measurement Methods Matrix (MMM)[1].[m
+[31m-                    [1] International Rules for CMC Claims in Ionizing Radiation Metrology Doc 3 March 16 2021 (Sept 2020),[m
+                     Consultative Committee for Ionizing Radiation metrology (CCRI),[m
+[31m-                    https://www.bipm.org/documents/20126/54619299/Rules+for+entering+CMC+claims+in+ionizing+radiation+metrology/c0b97b77-99e1-4abb-1d10-9a90a35fc9bf[m
+                     [m
+                     Additionally, to facilitate machine readability and actionability,[m
+[31m-                    the key comparison reference value and degrees of equivalence obtained in BIPM.RI(II)-K1 comparisons are made available in this machine-readable document.[m
+[32m+[m[32m                    the pilot comparison reference value and degrees of equivalence obtained in BIPM.RI(II)-P1 comparisons are made available in this machine-readable document.[m
+                     The metadata supporting these results are also included in this machine-readable document.[m
+                     The root structure is composed of:[m
+                     _ The general information about the key comparison (xml element: "generalInformation")[m
+[31m-                    _ The results of the key comparison (xml element: "comparisonData")[m
+[31m-                    _ The metadata (administrative and technical) supporting these results (xml element: "comparisonMetadata")[m
+[32m+[m[32m                    _ The releases with degrees of Equivalence and KCRVs (xml element: "comparisonData")[m
+[32m+[m[32m                    _ The technical metadata supporting these results (xml element: "comparisonSubmissions")[m
+                 </xs:documentation> [m
+             </xs:annotation>[m
+             <xs:element name = "generalInformation" type = "pc:softwareComparisonIDType"  minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "comparisonData" type = "pc:comparisonDataType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[31m-            <xs:element name = "comparisonMetadata" type = "pc:compMetaDataType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "comparisonData" type = "kc:comparisonDataType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+[32m+[m[32m            <xs:element name = "comparisonSubmissions" type = "pc:submissionType" minOccurs = "0" maxOccurs = "1"></xs:element>[m
+         </xs:sequence>[m
+     </xs:complexType>[m
+ [m

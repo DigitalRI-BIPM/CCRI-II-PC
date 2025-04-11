@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    version="1.0.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:dsi="https://ptb.de/si"
+    targetNamespace="KC_Schema"
+	xmlns:kc="KC_Schema"
+	elementFormDefault="qualified">
+            
+    <xs:import namespace = "https://ptb.de/si" schemaLocation = "https://www.ptb.de/si/v2.2.0/SI_Format.xsd"/>
+    
+    <xs:annotation>
+        <xs:documentation xml:lang="en">
+            This schema is a machine-readable version of BIPM.RI(II)-K1 key comparisons.
+        </xs:documentation>
+	    <xs:documentation xml:lang="en">
+            MIT License
+            
+            Copyright (c) 2023 Bureau International des Poids et Mesures
+            
+            Permission is hereby granted, free of charge, to any person obtaining a copy
+            of this software and associated documentation files (the "Software"), to deal
+            in the Software without restriction, including without limitation the rights
+            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+            copies of the Software, and to permit persons to whom the Software is
+            furnished to do so, subject to the following conditions:
+            
+            The above copyright notice and this permission notice shall be included in all
+            copies or substantial portions of the Software.
+            
+            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+            SOFTWARE.
+        </xs:documentation>
+		<xs:documentation xml:lang="en">
+            CONTACT: Romain.Coulon@bipm.org
+			DEVELOPMENT: https://github.com/TheBIPM/CCRI-II-KC
+			VERSION: 1.0.0
+			RELEASE DATE: 2023-10-02
+			DOI:
+        </xs:documentation>
+    </xs:annotation>
+    
+    
+	<!-- Define a laboratory -->
+    <xs:complexType name = "laboratoryType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    A laboratory or a metrological institute is defined by: 
+                    _ The acronym given in the list of signatories of the CIPM MRA: https://www.bipm.org/en/cipm-mra/participation/
+					_ The past acronyms used for this institute (when applicable)
+                    _ The RoR identifier (when available): https://ror.org/ 
+                </xs:documentation> 
+            </xs:annotation>                                                                  
+            <xs:element name = "acronym" type = "xs:string"></xs:element>
+			<xs:element name = "pastAcronyms" type = "xs:string" minOccurs = "0"></xs:element>
+            <xs:element name = "ror" type = "xs:anyURI" minOccurs = "0"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+     
+    <!-- Define a degree of equivalence -->
+	<xs:complexType name = "doeType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    Every participant in a comparison is entitled to have one result included in the KCDB as long as
+                    the NMI is a signatory or designated institute listed in the CIPM MRA and the result is valid
+                    (i.e., not older than 20 years).
+                    An NMI may withdraw its result only if all other participants agree.
+                    The degree of equivalence of a given measurement standard is the degree to which this standard is
+                    consistent with the KCRV.
+                    The degree of equivalence is expressed quantitatively in terms of the deviation from the key comparison
+                    reference value and the expanded uncertainty of this deviation ($k = 2$).
+                    The CCRI(II) agrees on the following statement on degree of equivalence evaluated in BIPM.RI(II)-K1 comparisons: 
+                        _ The degree of equivalence of the result of a particular NMI, $i$, with the key comparison reference value 
+                        is expressed as the difference $D_{i}$ between the values $D_{i}=A_{\textrm{e}i}-KCRV$
+                        and the expanded uncertainty ($k=2$)  of this difference, $U_{i}$, known as the equivalence uncertainty; hence $U_{i}=2u(D_{i})$.
+                        _ When the result of the NMI $i$ is included in the KCRV with a weight $w_{i}$, then $u^{2}(D_{i})=(1-2w_{i})u_i^{2}+u^{2}(KCRV)$.
+                        _ However, when the result of the NMI $i$ is not included in the KCRV, then $u^2(D_i)=u_i^2+u^2(KCRV)$.
+                        
+                    A degree of equivalence is reported with the following elements:
+                        _ The laboratory (xml element: "laboratory")
+                        _ The degree of equivalence defined by a dsi:real element.
+                        This element is expected to contain a value, a multiple of becquerel as unit,
+                        and an expanded uncertainty with a coverage factor equal to 2.
+                        The becquerel unit is defined in https://si-digital-framework.org/SI/units/becquerel
+                        and the possible prefixes in https://si-digital-framework.org/SI/prefixes
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "laboratory" type = "kc:laboratoryType" minOccurs = "0" maxOccurs = "1"></xs:element>
+			<xs:element name = "result" type="dsi:realQuantityType" minOccurs = "0" maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+	<!-- Define a linked comparison -->
+    <xs:complexType name = "linkedCompType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    In some cases, CCRI(II) or regional key comparisons could have been linked to the SIR.
+                    The degrees of equivalence in compliance with BIPM.RI(II)-K1 comparisons are provided.
+                    The linked comparison is identified
+                    _ by its CIPM-MRA identifier https://www.bipm.org/documents/20126/43742162/CIPM-MRA-G-11.pdf (xml element: "comparisonCode")
+                    _ the Consultative Committee (CC) that organize the comparison (xml element: "consultativeCommittee")
+                    _ or the Regional Metrology Organization (RMO) that organize the comparison (xml element: "rmo")
+                    _ the year when the comparison was carried out (xml element: "year")
+                    _ the DOI of the report of the linked comparison (xml element: "doi")  
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "comparisonCode" type="xs:string"></xs:element>
+            <xs:element name = "consultativeCommittee" type="xs:string" minOccurs="0"></xs:element>
+            <xs:element name = "rmo" type="xs:string" minOccurs="0"></xs:element>
+            <xs:element name = "year" type="xs:gYear"></xs:element>
+            <xs:element name = "doi" type="xs:anyURI"></xs:element>
+        </xs:sequence>
+    </xs:complexType>	
+    
+    <!-- Define a sequence of degrees of equivalence -->	
+	<xs:complexType name = "doesType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    Each time the comparisons are updated, a sequence of degrees of equivalence is published.
+                    Sometimes a sequence can be linked to a CCRI(II) or regional comparison.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "linkedComparison" type = "kc:linkedCompType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "degreeOfEquivalence" type = "kc:doeType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a release of the comparison -->
+	<xs:complexType name = "releaseType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    The comparison data is reported with the following elements: 
+                     _ The DOI of the related Metrologia technical supplement (xml element: "doi")
+                     _ The year of the comparison, meaning the year of the first publication or update of the comparison results (xml element: "year")
+                     _ The KCRV (xml element: "KCRV")
+                     _ The degrees of equivalence (xml element: "degreesOfEquivalence")
+					 
+                    In May 2013, the CCRI(II) decided to calculate the KCRV by using the power-moderated weighted mean (PMM).
+                    https://doi.org/10.1088/0026-1394/52/3/S200
+                    key comparison results can be selected for the KCRV with the following provisions: 
+                    _ results for solutions standardized by only primary techniques are accepted, with the exception of radioactive gas standards (for which results from transfer instrument measurements that are directly traceable to a primary measurement in the laboratory may be included); 
+                    _ each NMI or other laboratory may use only one result (normally the most recent result or the mean if more than one ampoule is submitted);
+                    _ results more than 20 years old are included in the calculation of the KCRV but are not included in data shown in the KCDB or in the plots in this report, as they have expired;Acronym
+                    _ possible outliers can be identified on a mathematical basis and excluded from the KCRV using the normalized error test with a test value of 2.5 and using the modified uncertainties;
+                    _ results can also be excluded for technical reasons; and
+                    _ the CCRI(II) is always the final arbiter regarding excluding any data from the calculation of the KCRV. Although the KCRV may be modified when other NMIs participate, on the advice of the Key Comparison Working Group of the CCRI(II), such modifications are made only by the CCRI(II) during one of its biennial meetings, or by consensus through electronic means (e.g., email) as discussed at the CCRI(II) meeting in 2013.
+                                                                
+                    The key comparison reference value (KCRV) is defined by a dsi: real element.
+                    This element is expected to contain a value, a multiple of becquerel as unit, and a standard uncertainty (a coverage factor equal to 1).
+                    The becquerel unit is defined in https://si-digital-framework.org/SI/units/becquerel
+                    and the possible prefixes in https://si-digital-framework.org/SI/prefixes					 
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "doi" type="xs:anyURI"></xs:element>
+            <xs:element name = "year" type="xs:gYear"></xs:element>
+			<xs:element name = "kcrv" type="dsi:realQuantityType" minOccurs= "0" maxOccurs = "1"></xs:element>			
+            <xs:element name = "degreesOfEquivalence" type = "kc:doesType" minOccurs ="0" maxOccurs = "unbounded"></xs:element>
+		</xs:sequence>
+    </xs:complexType>
+    	
+    <!-- Define a comparison -->	
+	<xs:complexType name = "comparisonIDType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    The comparison is defined by:
+                    _ the comparison code of the key comparison (xml element: "comparisonCode")
+                      such as defined in the CIPM MRA https://www.bipm.org/documents/20126/43742162/CIPM-MRA-G-11.pdf
+                    _ the service category identifier from the SI Digital Framework https://si-digital-framework.org/kcdb-sc
+                    _ the metrological data of the radionuclide gather in the SI Digital Framework https://si-digital-framework.org/kcdb-sc/nucl
+                    _ the identification of the pilot laboratory
+                </xs:documentation>
+            </xs:annotation>                  
+            <xs:element name = "comparisonCode" type="xs:string"></xs:element>
+            <xs:element name = "serviceCategoryID" type="xs:anyURI"></xs:element>
+            <xs:element name = "siDigitalFrameworkRadionuclide" type="xs:anyURI"></xs:element>			
+            <xs:element name = "pilot" type = "kc:laboratoryType"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a comparison data -->
+    <xs:complexType name = "comparisonDataType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    The comparison data is defined as a sequence of every releases of the given comparison.
+                    The comparison data contains the final results of the comparison (the KCRV and the degrees of equivalence)
+                    that could be used to claim CMC in the related KCDB service category.
+                </xs:documentation>
+            </xs:annotation> 
+            <xs:element name = "release" type = "kc:releaseType"  minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+        
+    <!-- Define a solvant -->
+    <xs:complexType name = "solvantType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    The solvant is identified by: 
+                    _ The SMILES identifier, media type: chemical/x-daylight-smiles
+                    _ The InChIKey identifier  http://inchi.info/inchikey_overview_en.html
+                    _ The InChI identifier https://iupac.org/project/2000-025-1-800/
+                    
+                    This concentration measurement is defined by a dsi:real element defined in the digital measurement representation https://ptb.de/si.
+                    This element is expected to contain a value, a coherent derived unit for the derived quantity amount of substance concentration,
+                    This unit is defined in the SI Digital Framework: https://si-digital-framework.org/SI/units/mole.decimetre-3
+                </xs:documentation> 
+            </xs:annotation>
+            <xs:element name = "smiles" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "InChIKey" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "InChI" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "solvantConcentration" type = "dsi:realQuantityType" minOccurs = "0" maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a carrier -->
+    <xs:complexType  name = "carrierType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    The carrier molecule is identified by: 
+                    _ The SMILES identifier, media type: chemical/x-daylight-smiles
+                    _ The InChIKey identifier  http://inchi.info/inchikey_overview_en.html
+                    _ The InChI identifier https://iupac.org/project/2000-025-1-800/
+                    
+                    This concentration measurement is defined by a dsi:real element defined in the digital measurement representation https://ptb.de/si.
+                    This element is expected to contain a value, a coherent derived unit for the derived quantity amount of substance concentration,
+					This unit is defined in the SI Digital Framework: https://si-digital-framework.org/SI/units/microkilogram.kilogram-1 (to be revised)
+                </xs:documentation> 
+            </xs:annotation>                                                                                    
+            <xs:element name = "smiles" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "InChIKey" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "InChI" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "carrierConcentration" type = "dsi:realQuantityType" minOccurs = "0" maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a chemical composition -->
+    <xs:complexType name = "chemCompType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    A standard solution of a radionuclide is described by the solvant of the solution and the carrier molecule of the radionuclide.
+                </xs:documentation> 
+            </xs:annotation>      
+            <xs:element name = "solvant" type = "kc:solvantType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+            <xs:element name = "carrier" type = "kc:carrierType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a radioactive solution -->
+	<xs:complexType name = "radSolType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    A radioactive standard solution submitted by a laboratory is defined by:
+                    _ An identifier (xml element: "solutionID") built such that RLY-I
+                        R: the radionuclide (eg. Ce-139)
+                        L: the acronym of the laboratory given in https://www.bipm.org/en/cipm-mra/participation/
+                        Y: the year of the measurement in the SIR
+                        I: an incremental number to identifier each ampoule in a set of ampoule sent by the laboratory
+                    _ The mass measurement of the solution carried out by the laboratory (xml element: "mass")
+					    This mass measurement is defined by a dsi:real element defined in the digital measurement representation https://ptb.de/si.
+                        This element is expected to contain a value, a multiple of kilogram as unit,
+                        and a (optional) standard uncertainty (a coverage factor equal to 1).
+                        The SI unit gram is defined in https://si-digital-framework.org/SI/units/millikilogram (to be redefined)
+                    _ The density measurement of the solution carried out by the laboratory (xml element: "density")
+                    _ The chemical composition of the solution (xml element: "chemicalComposition")
+                    _ Details on possible impurities contained in the solution (xml element: "impurities")
+                </xs:documentation> 
+            </xs:annotation>    
+            <xs:element name = "solutionID" type = "xs:string"  minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "mass" type="dsi:realQuantityType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "density" type = "dsi:realQuantityType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "chemicalComposition" type = "kc:chemCompType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "impurities" type = "xs:string"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a set of radioactive solutions -->
+    <xs:complexType name = "radSolsType">
+        <xs:sequence>
+		    <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    A laboratory can submit several ampoules of standard solution. In these case a sequence of radioactive solution is defined.
+                </xs:documentation> 
+            </xs:annotation>      
+            <xs:element name = "radioactiveSolution" type ="kc:radSolType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a bibliographical reference -->
+    <xs:complexType name = "referenceType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">         
+                    The reference could be defined by the bibliographical description in string (xml element: "detail")
+                    or/and the DOI of the document (xml element: "doi").
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "detail" type = "xs:string" minOccurs = "0"  maxOccurs = "1"></xs:element>
+            <xs:element name = "doi" type = "xs:anyURI" minOccurs = "0"  maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a half-life -->
+    <xs:complexType name = "halfLifeType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">         
+                    The half-life is given a dsi:real element defined in the digital measurement representation https://ptb.de/si.
+                    This element is expected to contain a value, a base unit for the quantity time,
+                    and a (optional) standard uncertainty (a coverage factor equal to 1).
+                    The base unit second is defined in https://si-digital-framework.org/SI/units/second
+                    and the possible prefixes in https://si-digital-framework.org/SI/prefixes
+                    The reference (optional) of the half-life evaluation is given in the xml element: "reference"  
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "evaluation" type="dsi:realQuantityType"></xs:element>
+            <xs:element name = "reference" type = "kc:referenceType" minOccurs = "0" maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define an Type A relative uncertainty -->
+    <xs:simpleType name = "relativeStandardUncertaintyTypeA">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">         
+                According to JCGM 100:2008 2.3.2, the type A uncertainty is an uncertainty evaluated by the statistical analysis of series of observations.
+				Here the relative uncertainty is considered dividing the uncertainty by the measurement value.
+				The Guides in Metrology are available in https://www.bipm.org/fr/web/guest/publications/guides
+                </xs:documentation>
+            </xs:annotation>
+            <xs:restriction base="xs:decimal"></xs:restriction>                                                                       
+    </xs:simpleType>	
+        
+    <!-- Define an Type B relative uncertainty -->
+    <xs:simpleType name = "relativeStandardUncertaintyTypeB">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">         
+                According to JCGM 100:2008 2.3.3, the type B uncertainty is an uncertainty evaluated by means other than the statistical analysis of series of observations.
+				Here the relative uncertainty is considered dividing the uncertainty by the measurement value.
+				The Guides in Metrology are available in https://www.bipm.org/fr/web/guest/publications/guides
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:decimal"></xs:restriction>                                                                       
+    </xs:simpleType>	
+	
+    <!-- Define an activity measurement -->
+    <xs:complexType name = "activityType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">         
+                    The activity measurement is given in a dsi:real element defined in the digital measurement representation https://ptb.de/si.
+                    This element is expected to contain a value, a multiple derive unit becquerel,
+                    and a standard uncertainty (a coverage factor equal to 1).
+                    The derived SI unit becquerel is defined in https://si-digital-framework.org/SI/units/becquerel
+                    and the possible prefixes in https://si-digital-framework.org/SI/prefixes
+                    Additionally,
+                    _ relative standard uncertainty from type A evaluation is given as a dimensionless decimal (xml element: "relStdUncertTypeA")
+                    _ relative standard uncertainty from type B evaluation is given as a dimensionless decimal (xml element: "relStdUncertTypeB")  
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "measurementResult" type="dsi:realQuantityType"></xs:element>
+            <xs:element name = "relStdUncertTypeA" type = "kc:relativeStandardUncertaintyTypeA" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "relStdUncertTypeB" type = "kc:relativeStandardUncertaintyTypeB" minOccurs = "0" maxOccurs = "1"></xs:element>                                                                            
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a laboratory measurement -->
+    <xs:complexType name = "labMeasType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    An activity measurement carried out by a laboratory is defined by:
+                    _ The reference date (xml element: "referenceDate")
+                    _ The identifier of the measured solution (xml element: "solutionID") built such that RLY-I
+                        R: the radionuclide (eg. Ce-139)
+                        L: the acronym of the laboratory given in https://www.bipm.org/en/cipm-mra/participation/
+                        Y: the year of the measurement in the SIR
+                        I: an incremental number to identifier each ampoule in a set of ampoule sent by the laboratory
+                    _ The half-life used by the laboratory (xml element: "halfLife")
+                    _ The identifier (xml element: "methodID") of the standardization method such as it has been defined by the CCRI(II)  https://github.com/RomainCoulon/BIPM.RI-II--K1_database/blob/main/FAIRversions/Acronyms.csv
+                    _ A more detailed description of the measurement method in string (xml element: "description")
+                    _ Possible additional comments on the measurements (xml element: "comments")
+                    _ The result of the activity measurement (xml element: "activity")
+                </xs:documentation> 
+            </xs:annotation> 
+            <xs:element name = "referenceDate" type = "xs:dateTime" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "solutionID" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "halfLife" type = "kc:halfLifeType"  minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "methodID" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "description" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "comments" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "activity" type = "kc:activityType" minOccurs = "0" maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a set of laboratory measurements -->
+    <xs:complexType name = "labMeassType">
+        <xs:sequence>
+		    <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    When the laboratory used several ampoules of standard solution or/and the laboratory applied several measurement methods,
+                    several measurement results can be reported accordingly.
+                    In this case, a sequence of measurement results is detailed.
+                </xs:documentation> 
+            </xs:annotation> 
+            <xs:element name = "measurement" type = "kc:labMeasType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a list of solutions -->
+    <xs:complexType name = "solutionsType">
+        <xs:sequence>
+		    <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    When the laboratory submitted several ampoules, an equivalent activity is estimated for this set.
+                    The list of solution identifiers is given.
+                </xs:documentation> 
+            </xs:annotation> 
+            <xs:element name = "solutionID" type = "xs:string" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a list of methods -->	
+	<xs:complexType name = "methodsType">
+        <xs:sequence>
+		    <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    When the laboratory reported results from several measurement methods, an equivalent activity is estimated for this set.
+                    The list of method identifiers is given.
+                </xs:documentation> 
+            </xs:annotation> 
+            <xs:element name = "method" type = "xs:string" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define an relative standard uncertainty from the BIPM instrument -->
+    <xs:simpleType name = "relativeStandardUncertainty">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">         
+                The SIR measurement has is own uncertainty that is combined with the laboratory uncertainties.
+                This specific contribution of the SIR to the final uncertainty is given by the standard uncertainty
+                divided by the value of the equivalent activity. 
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:decimal"></xs:restriction>                                                                       
+    </xs:simpleType>	
+    
+    <!-- Define an equivalent activity -->
+	<xs:complexType name = "eqActivityType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">         
+                    The equivalent activity measurement is given by a dsi:real element defined in the digital measurement representation https://ptb.de/si.
+                    This element is expected to contain a value, a multiple derive unit becquerel,
+                    and a standard uncertainty (a coverage factor equal to 1).
+                    The derived SI unit becquerel is defined in https://si-digital-framework.org/SI/units/becquerel
+                    and the possible prefixes in https://si-digital-framework.org/SI/prefixes
+                    In addition,
+                    _ the relative standard uncertainty from the SIR system is given as a dimensionless decimal (xml element: "relStdUncertFromSIR")
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "sirResult" type= "dsi:realQuantityType" minOccurs = "0"></xs:element>
+            <xs:element name = "relStdUncertFromSIR" type = "kc:relativeStandardUncertainty" minOccurs = "0"  maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a BIPM SIR measurement -->
+    <xs:complexType name = "bipmMeasType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">         
+                    The measurement of the BIPM using the SIR is described by:
+                    _ the solution(s) that have been measured (xml element: "solutions")
+                    _ the standardization method(s) used by the laboratory to estimate the activity (xml element: "methods")
+                    _ the reference Ra-226 source used for the SIR measurement (xml element: "referenceSource")
+                    _ the equivalence activity evaluation by the SIR (xml element: "EquivalentActivity") 
+                </xs:documentation>
+            </xs:annotation>                                                                
+            <xs:element name = "solutions" type = "kc:solutionsType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "methods" type = "kc:methodsType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "referenceSource" type = "xs:string" minOccurs = "0"></xs:element>
+            <xs:element name = "equivalentActivity" type = "kc:eqActivityType"></xs:element>
+            <xs:element name = "fromLinkedComparison" type = "xs:string" minOccurs = "0"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a set of BIPM SIR measurements -->
+    <xs:complexType name = "bipmMeassType">
+        <xs:sequence>
+		    <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    When the laboratory reported results from several measurement methods or submitted several ampoules,
+                    an equivalent activity is estimated for this set.
+                    It is also possible that an equivalence activity were reported for each method or ampoule.
+                    In the latter case, a sequence of SIR measurements can be reported. 
+                </xs:documentation> 
+            </xs:annotation> 
+            <xs:element name = "bipmMeasurement" type = "kc:bipmMeasType"  minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a submission to the BIPM SIR system -->
+    <xs:complexType name = "submissionType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">         
+                    A submission to obtain a degree of equivalence is described by providing details on:
+                    _ The participating laboratory (xml element: "laboratory")
+                    _ The year of the participation, ie measurement by the SIR  (xml element: "year")
+                    _ The boolean indicator (true or false) saying if the result is used in the KCRV (xml element: "inKCRV")
+                    _ The boolean indicator (true or false) saying if the result is currently valid for a degree of equivalence published in the KCDB (xml element: "doeValid")
+                    _ Details on the radioactive standard solution (xml element: "radioactiveSolutions")
+                    _ Details on the activity measurement carried out by the laboratory (xml element: "laboratoryMeasurements")
+                    _ Details on the SIR measurement (equivalent activity) carried out by the BIPM (xml element: "bipmMeasurements")
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "laboratory" type = "kc:laboratoryType" minOccurs = "0" maxOccurs = "1"></xs:element>										
+            <xs:element name = "year" type = "xs:gYear" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "inKCRV" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "doeValid" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "radioactiveSolutions" type = "kc:radSolsType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "laboratoryMeasurements" type = "kc:labMeassType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "bipmMeasurements" type = "kc:bipmMeassType"  minOccurs = "0" maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define the metadata of the key comparison -->
+    <xs:complexType name = "compMetaDataType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">         
+                    The metadata of key comparisons BIPM.RI(II)-K1 provide administrative and technical information
+                    on each submission (xml element: "submission") that contribute to the realization of the derived unit becquerel for a given radionuclide.
+                    The ultimate semantic reference for the becquerel unit is provided by the SI Reference Point: https://si-digital-framework.org/SI/units/becquerel
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "submission" type = "kc:submissionType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a key comparison -->
+    <xs:complexType name = "comparisonType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    Key comparison results are key data in the realization of the derived unit becquerel for a given radionuclide.
+                    The ultimate semantic reference for this derived SI unit is provided by https://si-digital-framework.org/SI/units/becquerel
+                    The key comparison results are officially publish on BIPM the Key Comparison DataBase https://www.bipm.org/kcdb/
+                     
+                    Successful participation in this comparison by a laboratory may provide evidential support for 
+                    Calibration and Measurement Capability (CMC) claims for [nuclide] measured using the laboratory’s 
+                    method(s) used in the comparison or methods calibrated by those used for the comparison. This
+                    comparison may also be used to support CMC claims for those radionuclides measured in the laboratory 
+                    using the same method and having a degree of difficulty at or below that of the radionuclide measured 
+                    in this comparison as indicated in the current Measurement Methods Matrix (MMM)[1].
+                    [1] International Rules for CMC Claims in Ionizing Radiation Metrology Doc 3 March 16 2021 (Sept 2020),
+                    Consultative Committee for Ionizing Radiation metrology (CCRI),
+                    https://www.bipm.org/documents/20126/54619299/Rules+for+entering+CMC+claims+in+ionizing+radiation+metrology/c0b97b77-99e1-4abb-1d10-9a90a35fc9bf
+                    
+                    Additionally, to facilitate machine readability and actionability,
+                    the key comparison reference value and degrees of equivalence obtained in BIPM.RI(II)-K1 comparisons are made available in this machine-readable document.
+                    The metadata supporting these results are also included in this machine-readable document.
+                    The root structure is composed of:
+                    _ The general information about the key comparison (xml element: "generalInformation")
+                    _ The results of the key comparison (xml element: "comparisonData")
+                    _ The metadata (administrative and technical) supporting these results (xml element: "comparisonMetadata")
+                </xs:documentation> 
+            </xs:annotation>
+            <xs:element name = "generalInformation" type = "kc:comparisonIDType"  minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "comparisonData" type = "kc:comparisonDataType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "comparisonMetadata" type = "kc:compMetaDataType" minOccurs = "0" maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+<!-- Define the main element: "comparison" -->
+<xs:element name = "comparison" type ="kc:comparisonType"></xs:element>
+
+</xs:schema>
