@@ -17,7 +17,7 @@
 	    <xs:documentation xml:lang="en">
             MIT License
             
-            Copyright (c) 2023 Bureau International des Poids et Mesures
+            Copyright (c) 2025 Bureau International des Poids et Mesures
             
             Permission is hereby granted, free of charge, to any person obtaining a copy
             of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +46,23 @@
         </xs:documentation>
     </xs:annotation>
 
+	<!-- Define a laboratory (from KC_Schema) -->
+    <xs:complexType name = "laboratoryType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    A laboratory or a metrological institute is defined by: 
+                    _ The acronym given in the list of signatories of the CIPM MRA: https://www.bipm.org/en/cipm-mra/participation/
+					_ The past acronyms used for this institute (when applicable)
+                    _ The RoR identifier (when available): https://ror.org/ 
+                </xs:documentation> 
+            </xs:annotation>                                                                  
+            <xs:element name = "acronym" type = "xs:string"></xs:element>
+			<xs:element name = "pastAcronyms" type = "xs:string" minOccurs = "0"></xs:element>
+            <xs:element name = "ror" type = "xs:anyURI" minOccurs = "0"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
 	<!-- Define a software (NEW) -->
     <xs:complexType name = "softwareType">
         <xs:sequence>
@@ -59,13 +76,36 @@
                     _ The DOI identifier (when available): https://doi.org/
                 </xs:documentation> 
             </xs:annotation>                                                                  
-            <xs:element name = "softwareName" type = "xs:string"></xs:element>
-			<xs:element name = "softwareVersion" type = "xs:string" minOccurs = "0"></xs:element>
-            <xs:element name = "laboratory" type = "kc:laboratoryType"></xs:element>
-            <xs:element name = "softwareApplication" type = "xs:string"></xs:element>
-            <xs:element name = "doi" type = "xs:anyURI" minOccurs = "0"></xs:element>
+            <xs:element name = "softwareName" type = "xs:string"></xs:element> <!-- SP /software/Title -->
+			<xs:element name = "softwareVersion" type = "xs:string" minOccurs = "0"></xs:element> <!-- SP /software/version_software -->
+            <xs:element name = "laboratory" type = "kc:laboratoryType"></xs:element> <!-- SP /software/name_lab -->
+            <xs:element name = "softwareApplication" type = "xs:string"></xs:element> <!-- SP /software/application_software -->
+            <xs:element name = "doi" type = "xs:anyURI" minOccurs = "0"></xs:element> <!-- SP /software/doi_software -->
         </xs:sequence>
     </xs:complexType>
+
+	<!-- Define a linked comparison (from KC_Schema) -->
+    <xs:complexType name = "linkedCompType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    In some cases, CCRI(II) or regional key comparisons could have been linked to the SIR.
+                    The degrees of equivalence in compliance with BIPM.RI(II)-K1 comparisons are provided.
+                    The linked comparison is identified
+                    _ by its CIPM-MRA identifier https://www.bipm.org/documents/20126/43742162/CIPM-MRA-G-11.pdf (xml element: "comparisonCode")
+                    _ the Consultative Committee (CC) that organize the comparison (xml element: "consultativeCommittee")
+                    _ or the Regional Metrology Organization (RMO) that organize the comparison (xml element: "rmo")
+                    _ the year when the comparison was carried out (xml element: "year")
+                    _ the DOI of the report of the linked comparison (xml element: "doi")  
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "comparisonCode" type="xs:string"></xs:element>
+            <xs:element name = "consultativeCommittee" type="xs:string" minOccurs="0"></xs:element>
+            <xs:element name = "rmo" type="xs:string" minOccurs="0"></xs:element>
+            <xs:element name = "year" type="xs:gYear"></xs:element>
+            <xs:element name = "doi" type="xs:anyURI"></xs:element>
+        </xs:sequence>
+    </xs:complexType>	
 
     <!-- Define a comparison (NEW) -->	
 	<xs:complexType name = "softwareComparisonIDType">
@@ -83,13 +123,60 @@
                     _ the (eventual) previous comparison that was source for the dataset
                 </xs:documentation>
             </xs:annotation>                  
-            <xs:element name = "softwareComparisonCode" type="xs:string"></xs:element>
-            <xs:element name = "serviceCategoryPID" type="xs:anyURI" minOccurs= "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "siDigitalFrameworkRadionuclide" type="xs:anyURI"></xs:element>
-            <xs:element name = "pilot" type = "kc:laboratoryType"></xs:element>
-            <xs:element name = "datasetMeasType" type="xs:string"></xs:element>
-            <xs:element name = "datasetDownLink" type="xs:anyURI"></xs:element>
-            <xs:element name = "linkedComparisonCode" type="kc:linkedCompType" minOccurs= "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "softwareComparisonCode" type="xs:string"></xs:element> <!-- SP /code_comparison/PK acronym_comp: string -->
+            <xs:element name = "serviceCategoryPID" type="xs:anyURI" minOccurs= "0" maxOccurs = "1"></xs:element> <!-- SP /code_comparison/radionuclide_SIDF: uri -->
+            <xs:element name = "pilot" type = "kc:laboratoryType"></xs:element> <!-- "BIPM" -->
+            <xs:element name = "datasetMeasType" type="xs:string"></xs:element> <!-- SP /code_comparison/type_of_data: list<str> -->
+            <xs:element name = "datasetDownLink" type="xs:anyURI"></xs:element> <!-- SP /code_comparison/link_dataset: url -->
+            <xs:element name = "linkedComparisonCode" type="kc:linkedCompType" minOccurs= "0" maxOccurs = "1"></xs:element> <!-- SP /code_comparison/acronymum_reference_KC: string -->
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define a degree of equivalence (from KC_Schema) -->
+	<xs:complexType name = "doeType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    Every participant in a comparison is entitled to have one result included in the KCDB as long as
+                    the NMI is a signatory or designated institute listed in the CIPM MRA and the result is valid
+                    (i.e., not older than 20 years).
+                    An NMI may withdraw its result only if all other participants agree.
+                    The degree of equivalence of a given measurement standard is the degree to which this standard is
+                    consistent with the KCRV.
+                    The degree of equivalence is expressed quantitatively in terms of the deviation from the key comparison
+                    reference value and the expanded uncertainty of this deviation ($k = 2$).
+                    The CCRI(II) agrees on the following statement on degree of equivalence evaluated in BIPM.RI(II)-K1 comparisons: 
+                        _ The degree of equivalence of the result of a particular NMI, $i$, with the key comparison reference value 
+                        is expressed as the difference $D_{i}$ between the values $D_{i}=A_{\textrm{e}i}-KCRV$
+                        and the expanded uncertainty ($k=2$)  of this difference, $U_{i}$, known as the equivalence uncertainty; hence $U_{i}=2u(D_{i})$.
+                        _ When the result of the NMI $i$ is included in the KCRV with a weight $w_{i}$, then $u^{2}(D_{i})=(1-2w_{i})u_i^{2}+u^{2}(KCRV)$.
+                        _ However, when the result of the NMI $i$ is not included in the KCRV, then $u^2(D_i)=u_i^2+u^2(KCRV)$.
+                        
+                    A degree of equivalence is reported with the following elements:
+                        _ The laboratory (xml element: "laboratory")
+                        _ The degree of equivalence defined by a dsi:real element.
+                        This element is expected to contain a value, a multiple of becquerel as unit,
+                        and an expanded uncertainty with a coverage factor equal to 2.
+                        The becquerel unit is defined in https://si-digital-framework.org/SI/units/becquerel
+                        and the possible prefixes in https://si-digital-framework.org/SI/prefixes
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "laboratory" type = "kc:laboratoryType" minOccurs = "0" maxOccurs = "1"></xs:element>
+			<xs:element name = "result" type="dsi:realQuantityType" minOccurs = "0" maxOccurs = "1"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Define a sequence of degrees of equivalence (from KC_Schema) -->	
+	<xs:complexType name = "doesType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    Each time the comparisons are updated, a sequence of degrees of equivalence is published.
+                    Sometimes a sequence can be linked to a CCRI(II) or regional comparison.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "linkedComparison" type = "kc:linkedCompType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "degreeOfEquivalence" type = "kc:doeType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -110,8 +197,11 @@
                 </xs:documentation>
             </xs:annotation>
             <xs:element name="measurementResult" type="dsi:realQuantityType"></xs:element>
+                <!-- <dsi:value>10066</dsi:value> from SP /comparison_data/activity_value: float -->
+                <!-- <dsi:unit>\kilo\becquerel</dsi:unit> from SP /comparison_data/activity_dsi_unit: list -->
             <xs:element name="standardUnc" type="dsi:valueStandardMUType"></xs:element>
-            <xs:element name="effDegreesOfFreedom" minOccurs="0" maxOccurs="1">
+                <!-- <dsi:valueStandardMU>101</dsi:valueStandardMU> from SP /comparison_data/std_unc_activity: float -->
+            <xs:element name="effDegreesOfFreedom" type="xs:integer" minOccurs="0" maxOccurs="1"> <!-- SP /comparison_data/effective_degrees_of_freedom: float -->
                 <xs:simpleType>
                     <xs:restriction base="xs:integer">
                         <xs:minInclusive value="1"/>
@@ -131,9 +221,11 @@
                     The ultimate semantic reference for the becquerel unit is provided by the SI Reference Point: https://si-digital-framework.org/SI/units/becquerel
                 </xs:documentation>
             </xs:annotation>
-            <xs:element name="software" type = "pc:softwareType"></xs:element>
-            <xs:element name="softwareVersion" type = "pc:softwareType" minOccurs = "0"></xs:element>
-            <xs:element name="typeOfDeadTimeBetaChannel" minOccurs="0" maxOccurs="1">
+            <xs:element name="activitySoftware" type = "pc:softwareType" minOccurs = "0"></xs:element> <!-- SP /comparison_data/Activity Estimation Software -->
+            <xs:element name="activitySoftwareVersion" type = "pc:softwareType" minOccurs = "0"></xs:element> <!-- SP /comparison_data/Activity Estimation Software Version -->
+            <xs:element name="countingSoftware" type = "pc:softwareType" minOccurs = "0"></xs:element> <!-- SP /comparison_data/Activity Estimation Software -->
+            <xs:element name="countingSoftwareVersion" type = "pc:softwareType" minOccurs = "0"></xs:element> <!-- SP /comparison_data/Activity Estimation Software Version -->
+            <xs:element name="typeOfDeadTimeBetaChannel" minOccurs="0" maxOccurs="1"> <!-- SP /comparison_data/type_deadtime_beta_channel: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -149,7 +241,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="typeOfDeadTimeGammaChannel" minOccurs="0" maxOccurs="1"> <!--4pby-->
+            <xs:element name="typeOfDeadTimeGammaChannel" minOccurs="0" maxOccurs="1"> <!--4pby-->  <!-- SP /comparison_data/4p_type_deadtime_gamma_channel: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -163,7 +255,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="coincidenceResolvingTimeBetaChannel" minOccurs="0" maxOccurs="1">
+            <xs:element name="coincidenceResolvingTimeBetaChannel" minOccurs="0" maxOccurs="1"> <!-- SP /comparison_data/coincidence_resolving_time_beta_channel: float -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -176,7 +268,7 @@
                     <xs:restriction base="xs:float"/>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="coincidenceResolvingTimeGammaChannel" minOccurs="0" maxOccurs="1"> <!--4pby-->
+            <xs:element name="coincidenceResolvingTimeGammaChannel" minOccurs="0" maxOccurs="1"> <!--4pby--> <!-- SP /comparison_data/4p_coincidence_resolving_time_gamma_channel: float -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -189,7 +281,7 @@
                     <xs:restriction base="xs:float"/>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="deadTimeBetaEvents" minOccurs="0" maxOccurs="1">
+            <xs:element name="deadTimeBetaEvents" minOccurs="0" maxOccurs="1"> <!-- SP /comparison_data/deadtime_beta_events: float -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -202,7 +294,7 @@
                     <xs:restriction base="xs:float"/>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="deadTimeGammaEvents" minOccurs="0" maxOccurs="1"> <!--4pby-->
+            <xs:element name="deadTimeGammaEvents" minOccurs="0" maxOccurs="1"> <!--4pby--> <!-- SP /comparison_data/4p_deadtime_gamma_events: float -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -215,7 +307,7 @@
                     <xs:restriction base="xs:float"/>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="delayTimeGammaChannel" minOccurs="0" maxOccurs="1"> <!--4pby-->
+            <xs:element name="delayTimeGammaChannel" minOccurs="0" maxOccurs="1"> <!--4pby--> <!-- SP /comparison_data/4p_delay_time_gamma_channel: float -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -229,7 +321,7 @@
                 </xs:simpleType>
             </xs:element>
             <!-- ##################### general description ########################-->
-            <xs:element name="typeOfAveraging" minOccurs="0" maxOccurs="1">
+            <xs:element name="typeOfAveraging" minOccurs="0" maxOccurs="1"> <!-- SP /comparison_data/type_of_averaging: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -243,7 +335,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="typeOfUncertaintyPropagation" minOccurs="0" maxOccurs="1">
+            <xs:element name="typeOfUncertaintyPropagation" minOccurs="0" maxOccurs="1"> <!-- SP /comparison_data/uncertainty_propagation: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -258,7 +350,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="countRateCorrectionType" minOccurs="0" maxOccurs="1">
+            <xs:element name="countRateCorrectionType" minOccurs="0" maxOccurs="1"> <!-- SP /comparison_data/count_rate_correction: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -275,7 +367,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="extrapolationType" minOccurs="0" maxOccurs="1">
+            <xs:element name="extrapolationType" minOccurs="0" maxOccurs="1"> <!-- SP /comparison_data/extrapolation: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -291,7 +383,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="relativeStdUncEfficiency" minOccurs="0" maxOccurs="1">
+            <xs:element name="relativeStdUncEfficiency" minOccurs="0" maxOccurs="1"> <!-- SP /comparison_data/relative_std_unc_efficiency: float -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -303,7 +395,7 @@
                 </xs:simpleType>
             </xs:element>
             <!-- ##################### TDCR additional variables ########################-->
-            <xs:element name="correctionAccidentalCoincidences" minOccurs="0" maxOccurs="1"> <!--TDCR-->
+            <xs:element name="correctionAccidentalCoincidences" minOccurs="0" maxOccurs="1"> <!--TDCR--> <!-- SP /comparison_data/tdcr_correction_accidental_coincidences: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -316,7 +408,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="betaSpectrum" minOccurs="0" maxOccurs="1"> <!--TDCR-->
+            <xs:element name="betaSpectrum" minOccurs="0" maxOccurs="1"> <!--TDCR--> <!-- SP /comparison_data/tdcr_beta_spectrum: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -326,7 +418,7 @@
                     <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="stoppingPowerModel" minOccurs="0" maxOccurs="1"> <!--TDCR-->
+            <xs:element name="stoppingPowerModel" minOccurs="0" maxOccurs="1"> <!--TDCR--> <!-- SP /comparison_data/tdcr_stopping_power_model: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -336,7 +428,7 @@
                     <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="quenchingModel" minOccurs="0" maxOccurs="1"> <!--TDCR-->
+            <xs:element name="quenchingModel" minOccurs="0" maxOccurs="1"> <!--TDCR--> <!-- SP /comparison_data/tdcr_quenching_model: string -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -346,7 +438,7 @@
                     <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="birksConstant" minOccurs="0" maxOccurs="1"> <!--TDCR-->
+            <xs:element name="birksConstant" minOccurs="0" maxOccurs="1"> <!--TDCR--> <!-- SP /comparison_data/tdcr_birks_constant: float -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -357,7 +449,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="lowerIntegrationBound" minOccurs="0" maxOccurs="1"> <!--TDCR-->
+            <xs:element name="lowerIntegrationBound" minOccurs="0" maxOccurs="1"> <!--TDCR--> <!-- SP /comparison_data/tdcr_lower_integration_bound: float -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -368,7 +460,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="asymmetryConsidered" minOccurs="0" maxOccurs="1"> <!--TDCR-->
+            <xs:element name="asymmetryConsidered" minOccurs="0" maxOccurs="1"> <!--TDCR--> <!-- SP /comparison_data/tdcr_asymmetry_considered: boolean -->
                 <xs:simpleType>
                     <xs:annotation> 
                         <xs:documentation xml:lang="en"> 
@@ -378,6 +470,54 @@
                     <xs:restriction base="xs:boolean"/>
                 </xs:simpleType>
             </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define a release of the comparison (from KC_Schema) -->
+	<xs:complexType name = "releaseType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    The comparison data is reported with the following elements: 
+                     _ The DOI of the related Metrologia technical supplement (xml element: "doi")
+                     _ The year of the comparison, meaning the year of the first publication or update of the comparison results (xml element: "year")
+                     _ The KCRV (xml element: "KCRV")
+                     _ The degrees of equivalence (xml element: "degreesOfEquivalence")
+					 
+                    In May 2013, the CCRI(II) decided to calculate the KCRV by using the power-moderated weighted mean (PMM).
+                    https://doi.org/10.1088/0026-1394/52/3/S200
+                    key comparison results can be selected for the KCRV with the following provisions: 
+                    _ results for solutions standardized by only primary techniques are accepted, with the exception of radioactive gas standards (for which results from transfer instrument measurements that are directly traceable to a primary measurement in the laboratory may be included); 
+                    _ each NMI or other laboratory may use only one result (normally the most recent result or the mean if more than one ampoule is submitted);
+                    _ results more than 20 years old are included in the calculation of the KCRV but are not included in data shown in the KCDB or in the plots in this report, as they have expired;Acronym
+                    _ possible outliers can be identified on a mathematical basis and excluded from the KCRV using the normalized error test with a test value of 2.5 and using the modified uncertainties;
+                    _ results can also be excluded for technical reasons; and
+                    _ the CCRI(II) is always the final arbiter regarding excluding any data from the calculation of the KCRV. Although the KCRV may be modified when other NMIs participate, on the advice of the Key Comparison Working Group of the CCRI(II), such modifications are made only by the CCRI(II) during one of its biennial meetings, or by consensus through electronic means (e.g., email) as discussed at the CCRI(II) meeting in 2013.
+                                                                
+                    The key comparison reference value (KCRV) is defined by a dsi: real element.
+                    This element is expected to contain a value, a multiple of becquerel as unit, and a standard uncertainty (a coverage factor equal to 1).
+                    The becquerel unit is defined in https://si-digital-framework.org/SI/units/becquerel
+                    and the possible prefixes in https://si-digital-framework.org/SI/prefixes					 
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "doi" type="xs:anyURI"></xs:element>
+            <xs:element name = "year" type="xs:gYear"></xs:element>
+			<xs:element name = "kcrv" type="dsi:realQuantityType" minOccurs= "0" maxOccurs = "1"></xs:element>			
+            <xs:element name = "degreesOfEquivalence" type = "kc:doesType" minOccurs ="0" maxOccurs = "unbounded"></xs:element>
+		</xs:sequence>
+    </xs:complexType>
+
+    <!-- Define a comparison data (from KC_Schema) -->
+    <xs:complexType name = "comparisonDataType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">
+                    The comparison data is defined as a sequence of every releases of the given comparison.
+                    The comparison data contains the final results of the comparison (the KCRV and the degrees of equivalence)
+                    that could be used to claim CMC in the related KCDB service category.
+                </xs:documentation>
+            </xs:annotation> 
+            <xs:element name = "release" type = "kc:releaseType"  minOccurs = "0" maxOccurs = "unbounded"></xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -395,12 +535,12 @@
                     _ The metadata related to activity estimation (xml element: "activityMetadata")
                 </xs:documentation> 
             </xs:annotation> 
-            <xs:element name = "referenceDate" type = "xs:dateTime" minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "methodID" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "description" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "comments" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "activity" type = "pc:activityType" minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "activityMetadata" type = "pc:measMetaDataType" minOccurs = "0" maxOccurs = "1"></xs:element> 
+            <xs:element name = "referenceDate" type = "xs:dateTime" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- SP /comparison_data/Created -->
+            <xs:element name = "methodID" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- SP /code_comparison/comparison_metohd_code: string -->
+            <xs:element name = "description" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- SP /comparison_data/Typeofmeasurement -->
+            <xs:element name = "comments" type = "xs:string" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- SP /comparison_data/comment -->
+            <xs:element name = "activity" type = "pc:activityType" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- from "activityType" -->
+            <xs:element name = "activityMetaData" type = "pc:measMetaDataType" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- from "measMetaDataType" -->
         </xs:sequence>
     </xs:complexType>
 
@@ -417,11 +557,25 @@
                     _ Details on the activity measurement carried out by the laboratory (xml element: "laboratoryMeasurements")
                 </xs:documentation>
             </xs:annotation>
-            <xs:element name = "laboratory" type = "kc:laboratoryType" minOccurs = "0" maxOccurs = "1"></xs:element>										
-            <xs:element name = "year" type = "xs:gYear" minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "inKCRV" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "doeValid" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "laboratoryMeasurements" type = "pc:softwareLabMeasType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "laboratory" type = "kc:laboratoryType" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- SP /comparison_data/Laboratory -->										
+            <xs:element name = "year" type = "xs:gYear" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- SP /comparison_data/Modified -->
+            <xs:element name = "inKCRV" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- if SP /comparison_data/true/reference_value: float !=0, true -->
+            <xs:element name = "doeValid" type = "xs:boolean" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- if SP /comparison_data/effective_degree_of_equivalence: string !=0, true -->
+            <xs:element name = "laboratoryMeasurements" type = "pc:softwareLabMeasType" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- from "softwareLabMeasType" -->
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Define the metadata of the key comparison -->
+    <xs:complexType name = "compMetaDataType">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:documentation xml:lang="en">         
+                    The metadata of pilot comparisons BIPM.RI(II)-P1 provide administrative and technical information
+                    on each submission (xml element: "submission") that contribute to the realization of the derived unit becquerel for a given radionuclide.
+                    The ultimate semantic reference for the becquerel unit is provided by the SI Reference Point: https://si-digital-framework.org/SI/units/becquerel
+                </xs:documentation>
+            </xs:annotation>
+            <xs:element name = "submission" type = "pc:submissionType" minOccurs = "0" maxOccurs = "unbounded"></xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -444,13 +598,13 @@
                     _ The technical metadata supporting these results (xml element: "comparisonSubmissions")
                 </xs:documentation> 
             </xs:annotation>
-            <xs:element name = "generalInformation" type = "pc:softwareComparisonIDType"  minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "comparisonData" type = "kc:comparisonDataType" minOccurs = "0" maxOccurs = "1"></xs:element>
-            <xs:element name = "comparisonSubmissions" type = "pc:submissionType" minOccurs = "0" maxOccurs = "1"></xs:element>
+            <xs:element name = "generalInformation" type = "pc:softwareComparisonIDType"  minOccurs = "0" maxOccurs = "1"></xs:element> <!-- from "softwareComparisonIDType" -->
+            <xs:element name = "comparisonData" type = "kc:comparisonDataType" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- from "comparisonDataType" -->
+            <xs:element name = "comparisonMetaData" type = "pc:compMetaDataType" minOccurs = "0" maxOccurs = "1"></xs:element> <!-- from "submissionType" -->
         </xs:sequence>
     </xs:complexType>
 
 <!-- Define the main element: "comparison" -->
-<xs:element name = "comparison" type ="pc:comparisonType"></xs:element>
+<xs:element name = "comparison" type ="pc:comparisonType"></xs:element> <!-- from "comparisonType" -->
 
 </xs:schema>
