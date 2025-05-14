@@ -1,0 +1,76 @@
+\documentclass[12pt]{iopart}
+\bibliographystyle{unsrt}
+\usepackage{cite}
+\usepackage[colorlinks, citecolor = blue, urlcolor = blue]{hyperref}
+\usepackage{lineno}
+\usepackage{longtable}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage{enumitem}
+\usepackage{lscape}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{pdfpages}
+\usepackage{siunitx}
+\linenumbers
+
+\begin{document}
+
+\title[Draft A - CONFIDENTIAL - March 2025]{Report of the BIPM comparison BIPM.RI(II)-P1.Co-60 of activity measurements of the radionuclide $^{60}$Co}
+
+\author{Eric Macedo$^{1}$, Romain Coulon$^{1}$, Manuel Nonis$^{1}$, Denis E. Bergeron$^{2}$, Brittany A. Broder$^{2}$, Leticia Pibida$^{2}$, Gulakhshan Hamad$^{2}$, Jeffrey T. Cessna $^{2}$ }
+
+\address{$^{1}$ Bureau International des Poids et Mesures, Pavillon de Breteuil, F-92312 S\`{e}vres Cedex, France.}
+\address{$^{2}$ National Institute of Standards and Technology (NIST), 100 Bureau Drive, Mail Stop 8462 MD 20899-8462 Gaithersburg, United States.}
+\ead{romain.coulon@bipm.org}
+\vspace{10pt}
+
+\begin{abstract}
+This report presents the results of the first pilot comparison of digital signal processing algorithms used for radionuclide activity standardization, conducted through the BIPM Code Comparison Platform. Participating national metrology institutes (NMIs) analyzed standardized list-mode datasets—derived from experimental measurements and Monte Carlo simulations—related to TDCR and $4\pi\beta$-$\gamma$ coincidence methods. Each laboratory submitted activity results with associated uncertainties and methodological metadata. The reference values and degrees of equivalence were established based on consistency among participants. This comparison marks a key advance toward digital transformation in metrology, providing a traceable and reproducible framework for benchmarking computational methods in radionuclide metrology.
+\end{abstract}
+
+\section{Introduction}
+
+The BIPM Code Comparison Platform was developed to enable structured and traceable comparisons of digital algorithms used in the primary standardization of radionuclide activity. In contrast to the traditional approach used in the International Reference System (SIR), which relies on the physical measurement of radioactive sources using ionization chambers, this comparison is entirely digital and focuses on the signal processing stage of the measurement process. It is intended for national metrology institutes (NMIs) that use digital list-mode data acquisition and post-processing to determine radionuclide activity.
+
+Each participating laboratory receives a standardized dataset representing list-mode signals generated from experimental measurement and Monte Carlo simulation, mainly related to TDCR and 4$\pi\beta$-$\gamma$ methods. Laboratories apply their own software to process the data and submit a report including the activity result, associated uncertainty, and detailed metadata about the method and software used. The results are analyzed centrally, and the reference values and degrees of equivalence are assessed on the basis of consistency among laboratories.
+
+This software comparison represents an important step in aligning metrological practice with the digital transformation underway in measurement science. It enables the benchmarking of computational methods across NMIs, improves reproducibility of signal processing, and supports transparency in algorithm development. The results of this comparison are intended to contribute to the BIPM’s digital key comparison infrastructure and may serve as evidence supporting future Calibration and Measurement Capability (CMC) claims for software-based measurement chains.
+
+
+\section{Participants}
+
+Laboratory details are given in Table~\ref{Table1}, with the earlier submissions being taken from \cite{KCRV_2021,KCRV_2022}. The dates of measurement in the SIR given in Table~\ref{Table1} are used in the KCDB and all references in this report.
+
+\begingroup
+\footnotesize
+\begin{longtable}[l]{| p{.10\textwidth} | p{.10\textwidth} | p{.26\textwidth} | p{.13\textwidth} | p{.13\textwidth} | p{.14\textwidth} |} 
+\caption{Details of the participants in the BIPM.RI(II)-K1.Ac-225.}
+\label{Table1} \\ 
+\hline
+ \textbf{NMI or laboratory} & \textbf{Previous acronyms or other institutes} & \textbf{Full name} & \textbf{Country} & \textbf{Regional Metrology Organization (RMO)} & \textbf{Date of SIR measurement} \scriptsize{yyyy-mm-dd} \\ 
+\endfirsthead
+\multicolumn{6}{c}{... Continuation of Table 1.}\\ 
+\hline
+ \textbf{NMI or laboratory} & \textbf{Previous acronyms or other institutes} & \textbf{Full name} & \textbf{Country} & \textbf{RMO} & \textbf{Date of SIR measurement} \scriptsize{yyyy-mm-dd} \\ \hline 
+\endhead
+\hline
+NIST&NBS&National Institute of Standards and Technology&United States&SIM&2023-11-15 \\ 
+\hline
+POLATOM&IBJ, RC&National Centre for Nuclear Research Radioisotope Centre POLATOM&Poland&EURAMET&2021-07-06 \\ 
+\hline
+PTB&-&Physikalisch-Technische Bundesanstalt&Germany&EURAMET&2019-06-21 \\ 
+\hline
+\end{longtable} 
+\endgroup
+\section{NMI standardization methods}
+
+Each NMI that submits ampoules to the SIR has measured the activity either by a primary standardization method or by using a secondary method, for example a calibrated ionization chamber. In the latter case, the traceability of the calibration needs to be clearly identified to ensure that appropriate correlations are taken into account.\\ 
+
+A brief description of the standardization methods used by the laboratories, the activities submitted, the relative standard uncertainties and the half life used by the participants are given in Table~\ref{Table2}. The uncertainty budget for the new submission is given in~\ref{ApUBudget} attached to this report; previous uncertainty budgets are given in the earlier reports \cite{KCRV_2021,KCRV_2022}. The list of acronyms used to summarize the methods is given in~\ref{ApAccro}.\\ 
+
+ABC
+
+\end{document}

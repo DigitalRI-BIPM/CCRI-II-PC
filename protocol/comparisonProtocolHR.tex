@@ -1,0 +1,218 @@
+\documentclass[12pt]{iopart}
+\bibliographystyle{unsrt}
+\newcommand{\subtitle}[1]{ % Personalized command to "\subtitle"
+    \vspace{0.3em}\large{#1}\par\vspace{1.5em} %\vspace: add vertical space of 0.5em; 1em: width of letter "M" in the actual font.
+} % LaTeX font sizes: \tiny, \scriptsize, \footnotesize, \small, \normalsize, \large, \Large, \LARGE, \huge, \Huge
+\renewcommand{\note}[1]{%
+    \noindent\textit{ #1}
+}
+\usepackage{cite}
+\usepackage[colorlinks, citecolor = blue, urlcolor = blue]{hyperref}
+\usepackage{lineno}
+\usepackage{longtable}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage{enumitem}
+\usepackage{lscape}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{pdfpages}
+\usepackage{siunitx}
+\usepackage{hyperref}  % To create links
+\linenumbers
+
+\begin{document}
+
+\title[Draft - PROTOCOL - May 2025]{Protocol for a CCRI(II) Pilot Comparison of Data Processing Algotithims used in Radionuclide Metrology}
+\subtitle{Acronym: BIPM.RI(II)-P1.DPA}
+
+\author{Eric Macedo$^{1}$, Romain Coulon$^{1}$}
+
+\address{$^{1}$ Bureau International des Poids et Mesures, Pavillon de Breteuil, F-92312 S\`{e}vres Cedex, France.}
+\ead{eric.macedo@bipm.org}
+\vspace{10pt}
+
+\section{General Information}
+
+\subsection{Pilot institute}
+
+Bureau International des Poids et Mesures (BIPM) - International Organization
+
+\subsection{Participants}
+
+Laboratory details are given in Table~\ref{Table1}.
+
+\begingroup
+\footnotesize
+\begin{longtable}[l]{| p{.12\textwidth} | p{.14\textwidth} | p{.30\textwidth} | p{.13\textwidth} | p{.14\textwidth} |} 
+\caption{Details of the participants in the BIPM.RI(II)-P1.DPA.}
+\label{Table1} \\ 
+\hline
+ \textbf{NMI or laboratory} & \textbf{Previous acronyms or other institutes} & \textbf{Full name} & \textbf{Country} & \textbf{Regional Metrology Organization (RMO)} \\ 
+\endfirsthead
+\multicolumn{5}{c}{... Continuation of Table 1.}\\ 
+\hline
+ \textbf{NMI or laboratory} & \textbf{Previous acronyms or other institutes} & \textbf{Full name} & \textbf{Country} & \textbf{RMO}\\ \hline 
+\endhead
+\hline
+NIST&NBS&National Institute of Standards and Technology&United States&SIM \\ 
+\hline
+POLATOM&IBJ, RC&National Centre for Nuclear Research Radioisotope Centre POLATOM&Poland&EURAMET \\ 
+\hline
+PTB&-&Physikalisch-Technische Bundesanstalt&Germany&EURAMET \\ 
+\hline
+\end{longtable} 
+\endgroup
+
+\subsection{Measurand}
+
+The measurand for this exercise is activity per mass.
+
+\subsection{Schedule}
+
+\begin{itemize}[leftmargin=2em, label={}]  % Empty label to suppress bullet for headings
+  \item \textbf{Publication}
+  \begin{itemize}[leftmargin=3em]
+    \item Protocol publication: \textbf{28th March 2025}
+  \end{itemize}
+
+  \item \textbf{Registration}
+  \begin{itemize}[leftmargin=3em]
+    \item Registering information: \textbf{28th March to 1st April 2025}
+  \end{itemize}
+
+  \item \textbf{Dataset Distribution}
+  \begin{itemize}[leftmargin=3em]
+    \item Dataset available on NuCodeComp/Comparison Info and sent by email: \textbf{28th March 2025}
+    \item Dataset send by email: \textbf{28th March 2025}
+  \end{itemize}
+
+  \item \textbf{Result Submission}
+  \begin{itemize}[leftmargin=3em]
+    \item Opening date: \textbf{1st April 2025}
+    \item Closing date: \textbf{10th June 2025}
+  \end{itemize}
+
+  \item \textbf{Draft Review Process}
+  \begin{itemize}[leftmargin=3em]
+    \item Draft A sent to participants: \textbf{1st May 2025}
+    \item Draft A acceptance deadline: \textbf{1st May 2025}
+    \item Draft B sent to participants: \textbf{1st May 2025}
+    \item Draft B acceptance deadline: \textbf{1st May 2025}
+  \end{itemize}
+\end{itemize}
+
+\subsection{Registering}
+
+For the registration step, the participant shall send to BIPM via email (\emph{digital.ri@bipm.org}) the following information: \\
+\begin{itemize}[leftmargin=2em, label={}]  % Empty label to suppress bullet for headings
+  \item \textbf{Acronym*} [Ex.: BIPM]
+  \item \textbf{Name*} [Ex.: Bureau International des Poids et Mesures]
+  \item \textbf{RMO*} [Ex.: BIPM]
+  \item \textbf{ROR identifier} [Ex.: \href{https://ror.org/055vkyj43}{https://ror.org/055vkyj43}]
+  \item \textbf{Website} [Ex.: \href{https://www.bipm.org/en/home}{https://www.bipm.org/en/home}]
+  \item \textbf{Responsible*}
+  \begin{itemize}[leftmargin=3em]
+    \item \textbf{NAME*} [Ex.: Romain Coulon]
+    \item \textbf{Email*} [Ex.: abc@bipm.org]
+    \item \textbf{ORCID identifier} [Ex.: \href{https://orcid.org/0000-0002-6787-7486}{https://orcid.org/0000-0002-6787-7486}]
+  \end{itemize}
+  \item \textbf{Contributor} (if different from Responsible)
+  \begin{itemize}[leftmargin=3em]
+    \item \textbf{NAME*} [Ex.: Romain Coulon]
+    \item \textbf{Email*} [Ex.: abc@bipm.org]
+    \item \textbf{ORCID identifier} [Ex.: \href{https://orcid.org/0000-0002-6787-7486}{https://orcid.org/0000-0002-6787-7486}]
+  \end{itemize}
+  \item *For mandatory information \\
+
+  \item NOTE: If the institute/responsible/contributor is already registered, this information doesn’t need to be delivered, unless the previous information has to be updated.
+\end{itemize}
+
+The institute shall register its software on the NuCodeComp/Laboratory Info (as can be seen on ~\ref{AppI}, item A.5), or by sending the following information via email (\emph{digital.ri@bipm.org}): \\
+
+\begin{itemize}[leftmargin=2em, label={}]  % Empty label to suppress bullet for headings
+  \item \textbf{Counting Software*}
+  \begin{itemize}[leftmargin=3em]
+    \item \textbf{NAME*} [Ex.: Software A]
+    \item \textbf{Version*} [Ex.: v1.0]
+    \item \textbf{DOI} [Ex.: \href{https://doi.org/0000-0002-6787-7486}{https://doi.org/0000-0002-6787-7486}]
+  \end{itemize}
+  \item \textbf{Activity Estimation Software*} (if different from the Counting one)
+  \begin{itemize}[leftmargin=3em]
+    \item \textbf{NAME*} [Ex.: Software B]
+    \item \textbf{Version*} [Ex.: v1.0]
+    \item \textbf{DOI} [Ex.: \href{https://doi.org/0000-0002-6787-7486}{https://doi.org/0000-0002-6787-7486}]
+  \end{itemize}
+  \item *For mandatory information \\
+
+  \item NOTE: If the software is already registered/updated, this information doesn’t need to be delivered.
+\end{itemize}
+
+\subsection{Overal info}
+
+The BIPM shall be responsible for maintaining up-to-date the pilot comparison status reports to the Executive Secretary of CCRI(II) and leaving them available at the NuCodeComp/Comparison Info page for participants. \\
+
+The software comparison brings no costs associated with preparing, calibrating, shipping, or other steps. \\
+
+All results, method of standardisation, associated uncertainties, and any additional requested information shall be uploaded on NuCodeComp/Upload Comparison Data page. Alternatively, this information can be sent via email (\emph{digital.ri@bipm.org}). The BIPM will have a “Participant level” (BIPM\_Part) account to input its results, and another with “Pilot level” of access (BIPM\_Pilot). \\
+
+The comparison results are composed of the main results, related to the traditional activity estimation data, and the subset results, related to individual measurements that will provide some key metadata to be part of the comparison analysis. Some inputs are mandatory (*), and some are optional. \\
+
+Participants shall provide (uploading as Attachment) a list containing the principal components of the uncertainty budget based on the Guide to the Expression of Uncertainty in Measurement, published by ISO. Uncertainties are evaluated at a level of one standard uncertainty, and information can be given on the number of effective degrees of freedom required for a proper estimate of the level of confidence, where this is appropriate. \\
+
+% After the comparison, a file with all principal components of the uncertainty, common to all the participants, and individual institutes can add any other components they consider appropriate. \\
+
+The participating institute shall check the dataset information for any possible discrepancies or errors and report this to the BIPM. \\
+
+\section{Comparison report}
+
+The BIPM is responsible for preparing the comparison report. This report goes through several stages before publication, referred to here as Draft A and Draft B. \\
+
+During the comparison, as results are received via the NuCodeComp digital platform or Microsoft Forms, they are kept confidential by the BIPM\_Pilot until all participants have completed their measurements and all results have been received, or until the deadline for result submission has passed. \\
+
+\note{\small{NOTE: The user tutorial for NuCodeComp can be accessed through the following link:}}
+\href{run:./NuCodeComp_UserTutorial.pdf}{\small{Download the NuCodeComp User Tutorial}} \\
+
+A participant’s result is not considered complete without an associated uncertainty and will not be included in the draft report unless it is accompanied by a full uncertainty budget. Uncertainties must be provided in accordance with the guidance outlined in the Technical Protocol. \\
+
+If, upon reviewing the complete set of results, the BIPM identifies any that appear anomalous, the corresponding institutes are invited to check their data for numerical errors, without being informed of the magnitude or direction of the suspected anomaly. If no error is found, the result remains unchanged and the complete set of results is then circulated to all participants. \\
+
+The Draft A report is prepared once all participant results have been received. It includes the results, associated uncertainties, standardisation methods, and experimental details provided by the participants, identified by name. \\
+
+Once the Draft A report has been prepared, the comparison results will be made available to participants via the NuCodeComp Dashboard and through the regular reporting mechanism at this stage. \\
+
+\clearpage
+
+%\appendix
+%\section{Introductory text for $^{225}$Ac degrees of equivalence}
+%\label{AppI}
+%\textbf{Key comparison BIPM.RI(II)-K1.Ac-225}\\ 
+ %\\ 
+%\textbf{MEASURAND: Equivalent activity of $^{225}$Ac}\\ 
+ %\\ 
+%\color{red} Key comparison reference value: the SIR reference value $x_{\scriptsize{\textrm{R}}}$ for this radionuclide is \num{74760} kBq , with a standard uncertainty, $u_{\scriptsize{\textrm{R}}}$ equal to \num{170} kBq (see Section~\ref{secKCRV} of the Final Report). The value $x_{i}$ is taken as the equivalent activity for a laboratory $i$.\\ 
+% \\ 
+%\color{blue} The degree of equivalence of each laboratory with respect to the reference value is given by a pair of terms: $D_{i} = (x_{i} - x_{\scriptsize{\textrm{R}}})$ and $U_{i}$, its expanded uncertainty ($k = 2$), both expressed in kBq, and $U_{i} = 2((1 - 2w_{i})u_{i}^{2} + u_{\scriptsize{\textrm{R}}}^{2})^{1/2}$, where $w_{i}$ is the weight of laboratory $i$ contributing to the calculation of $x_{\scriptsize{\textrm{R}}}$. \\ 
+
+%\clearpage
+
+%\section{Table of degrees of equivalence for BIPM.RI(II)-K1.Ac-225}
+%\label{AppII}
+%\setcounter{footnote}{0} 
+%\begin{longtable}{| p{.20\textwidth} | p{.20\textwidth} | p{.20\textwidth} |} 
+%\caption{The table of degrees of equivalence for BIPM.RI(II)-K1.Ac-225}
+%\label{Table5} \\ 
+%\hline
+%\textbf{NMI $i$} & \textbf{$D_{i}$ /kBq} & \textbf{$U_{i}$ /kBq} \\ \hline 
+%\endfirsthead
+%\hline
+%\textbf{NMI $i$} & \textbf{$D_{i}$ /kBq} & \textbf{$U_{i}$ /kBq} \\ \hline 
+%\endhead
+% PTB & -240 & 400 \\ \hline 
+ %POLATOM & 320 & 410 \\ \hline 
+ %NIST & -70 & 410 \\ \hline 
+%\end{longtable} 
+
+\end{document}

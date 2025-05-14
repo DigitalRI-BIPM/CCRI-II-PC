@@ -1,0 +1,7 @@
+KCRV = 7599.149
+u(KCRV) = 8.749053
+
+Degrees of Equivalence (k=2):
+BIPM_pilot         D =   4.85  +/- 26
+LABPROSAUD/IFBA    D =  -4.15  +/- 19.8
+NIM                D =  0.851  +/- 33

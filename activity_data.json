@@ -1,0 +1,20 @@
+[
+  {
+    "comparison": "alpha1",
+    "lab": "BIPM_pilot",
+    "x": 7604.0,
+    "u": 16.0
+  },
+  {
+    "comparison": "alpha1",
+    "lab": "LABPROSAUD/IFBA",
+    "x": 7595.0,
+    "u": 12.0
+  },
+  {
+    "comparison": "alpha1",
+    "lab": "NIM",
+    "x": 7600.0,
+    "u": 20.0
+  }
+]
