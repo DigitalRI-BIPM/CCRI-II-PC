@@ -19,23 +19,23 @@
       <kc:release>
         <kc:doi></kc:doi>
         <kc:year>2025</kc:year>
-        <kc:kcrv>5421.0</kc:kcrv>
+        <kc:kcrv>7599.149</kc:kcrv>
         <kc:degreesOfEquivalence>
           <lab>LABPROSAUD/IFBA</lab>
-          <value>5422.0</value>
-          <stdUnc>3.0</stdUnc>
+          <value>-4.15</value>
+          <stdUnc>9.9</stdUnc>
           <unit>\kilo\becquerel</unit>
         </kc:degreesOfEquivalence>
         <kc:degreesOfEquivalence>
           <lab>NIM</lab>
-          <value>5444.0</value>
-          <stdUnc>4.0</stdUnc>
+          <value>0.851</value>
+          <stdUnc>16.5</stdUnc>
           <unit>\kilo\becquerel</unit>
         </kc:degreesOfEquivalence>
         <kc:degreesOfEquivalence>
           <lab>BIPM_pilot</lab>
-          <value>5437.0</value>
-          <stdUnc>5.0</stdUnc>
+          <value>4.85</value>
+          <stdUnc>13.0</stdUnc>
           <unit>\kilo\becquerel</unit>
         </kc:degreesOfEquivalence>
       </kc:release>
@@ -58,7 +58,7 @@
           <comments>NONE</comments>
           <activity>
             <measurementResult>
-              <dsi:value>7684.0</dsi:value>
+              <dsi:value>7604.0</dsi:value>
               <dsi:unit>\kilo\becquerel</dsi:unit>
               <dsi:measurementUncertaintyUnivariate>
                 <dsi:standardMU>
@@ -109,7 +109,7 @@
           <comments>NONE</comments>
           <activity>
             <measurementResult>
-              <dsi:value>7555.0</dsi:value>
+              <dsi:value>7595.0</dsi:value>
               <dsi:unit>\kilo\becquerel</dsi:unit>
               <dsi:measurementUncertaintyUnivariate>
                 <dsi:standardMU>
@@ -160,11 +160,11 @@
           <comments>NONE</comments>
           <activity>
             <measurementResult>
-              <dsi:value>100.0</dsi:value>
+              <dsi:value>7600.0</dsi:value>
               <dsi:unit>\kilo\becquerel</dsi:unit>
               <dsi:measurementUncertaintyUnivariate>
                 <dsi:standardMU>
-                  <dsi:valueStandardMU>0.1</dsi:valueStandardMU>
+                  <dsi:valueStandardMU>20.0</dsi:valueStandardMU>
                 </dsi:standardMU>
               </dsi:measurementUncertaintyUnivariate>
             </measurementResult>

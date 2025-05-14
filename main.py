@@ -3,22 +3,22 @@ from lxml import etree
 from datetime import datetime
 
 # Load input data
-with open("laboratory.txt", "r", encoding="utf-8") as f:
+with open("databaseJSON/laboratory.txt", "r", encoding="utf-8") as f:
     laboratory_data = json.load(f)
 
-with open("code_comparison.txt", "r", encoding="utf-8") as f:
+with open("databaseJSON/code_comparison.txt", "r", encoding="utf-8") as f:
     code_comparison_data = json.load(f)
 
-with open("comparison_data.txt", "r", encoding="utf-8") as f:
+with open("databaseJSON/comparison_data.txt", "r", encoding="utf-8") as f:
     comparison_results = json.load(f)
 
-with open("comparison_board.txt", "r", encoding="utf-8") as f:
+with open("databaseJSON/comparison_board.txt", "r", encoding="utf-8") as f:
     board_data = json.load(f)
 
-with open("doe_degree_of_equivalence.txt", "r", encoding="utf-8") as f:
+with open("databaseJSON/doe_degree_of_equivalence.txt", "r", encoding="utf-8") as f:
     doe_data = json.load(f)
 
-with open("pdrv_reference_values.txt", "r", encoding="utf-8") as f:
+with open("databaseJSON/pdrv_reference_values.txt", "r", encoding="utf-8") as f:
     ref_value_data = json.load(f)
 
 # Build dictionaries for easier lookup
@@ -299,3 +299,24 @@ for kcrv_entry in [r for r in ref_value_data if r.get("pcrv_comparison") == comp
 
 tree = etree.ElementTree(root)
 tree.write("output_comparison.xml", pretty_print=True, xml_declaration=True, encoding="UTF-8")
+
+# Creation of JSON file to calculate RV and DoE via "PMM.ipynb"
+activity_export = []
+
+for submission_entry in [s for s in comparison_results if s.get("Comparison") == comparison_code]:
+    activity_value = submission_entry.get("field_34", "")
+    std_unc_value = submission_entry.get("field_35", "")
+    lab_name = submission_entry.get("Laboratory", "")
+    
+    # Skip if any are missing
+    if activity_value and std_unc_value:
+        activity_export.append({
+            "comparison": comparison_code,
+            "lab": lab_name,
+            "x": activity_value,
+            "u": std_unc_value
+        })
+
+# Creating the JSON file
+with open("activity_data.json", "w", encoding="utf-8") as f:
+    json.dump(activity_export, f, indent=2)
